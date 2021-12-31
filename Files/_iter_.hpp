@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:54:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/12/31 14:14:42 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/12/31 18:54:20 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ namespace	ft
 	};
 
 	template <typename It>
-	class It_vector : public _RANDOM_ACCESS_ITERATOR_ {
+	class _vectorIter : public _RANDOM_ACCESS_ITERATOR_ {
 
 		public:
 			// Typedefs :
@@ -90,7 +90,7 @@ namespace	ft
 
 	// ------------- REVERSE_ITERATOR ------------ {
 	template <typename It>
-	class It_reverse : public iterator<typename iterator_traits<It>::iterator_category,
+	class _reverseIter : public iterator<typename iterator_traits<It>::iterator_category,
 									typename iterator_traits<It>::value_type,
 									typename iterator_traits<It>::reference,
 									typename iterator_traits<It>::difference_type,
@@ -104,19 +104,92 @@ namespace	ft
 				typedef typename	iterator_traits<It>::difference_type	difference_type;
 				
 				// Construction :
-				It_reverse() { } // default constructor
-				It_reverse(iterator_type it):_current_it(it) { } // Constructs a reverse iterator from some orginal iterator it(biderictional or random)
+				_reverseIter() { } // default constructor
+				_reverseIter(iterator_type it):_current_it(it) { } // Constructs a reverse iterator from orginal iterator it(biderictional or random)
 				template <typename new_it>
-				It_reverse(const It_reverse<new_it>& rev_it) 
+				_reverseIter(const _reverseIter<new_it>& rev_it):_current_it(rev_it.base()) { } // Construct with the iterator of rev_it
+
+				// Base(): returns a copy of the base iterator .
+				iterator_type	base() const { return (this->_current_it); } 
+
+				// Dereference iterator : 
+				reference	operator*() const
 				{
+					iterator_type	tmp = _current_it;
 					
+					return (*--tmp);
 				}
 
+				// Addition operator :
+				_reverseIter	operator+(difference_type _diff) const
+				{
+					return (_reverseIter(_current_it - _diff));
+				}
+
+				// Substraction operator :
+				_reverseIter	operator-(difference_type _diff) const
+				{
+					return (_reverseIter(_current_it + _diff));
+				}
+
+				// Increment iterator position : {
+				// pre-increment :
+				_reverseIter&	operator++() { return (--(*this)); }
+				// post-increment :
+				_reverseIter	operator++(int)
+				{
+					_reverseIter	tmp(*this);
+					
+					--(*this);
+					return (tmp);
+				}
+				//}
+				
+				// Decrement iterator position : {
+				// pre-decrement :
+				_reverseIter&	operator--() { return (++(*this)); }
+				// post-decrement :
+				_reverseIter	operator--(int)
+				{
+					_reverseIter	tmp(*this);
+					
+					++(*this);
+					return (tmp);
+				}
+				//}
+
+				// Advance iterator : decreases the rev_iter by _diff elements positions
+				_reverseIter&	operator+=(difference_type _diff)
+				{
+					this->_current_it -= _diff;
+					return (*this);
+				}
+
+				// Retrocede iterator : advance the rev_it by _diff elements positions.
+				_reverseIter&	operator-=(difference_type _diff)
+				{
+					this->_current_it += _diff;
+					return (*this);
+				}
+
+				// Dereference iterator : returns a pointer to the element pointer to by the iterator (in order to access one of its members.)
+				pointer	operator->() const
+				{
+					return &(operator*());
+				}
+				
+				// Dereference iterator with offset :
+				reference	operator[](difference_type _diff) const
+				{
+					return (*(*this + _diff));
+				}
+				
 			private:
 				iterator_type		_current_it;
 		
 	};
 	// END! ------------- REVERSE_ITERATOR ------------
+	
 } // END! ft namespace
 
 #endif
