@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:54:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/12/30 18:39:39 by abdait-m         ###   ########.fr       */
+/*   Updated: 2021/12/31 14:14:42 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ namespace	ft
 	class	iterator_traits{
 
 		public:
-			typedef typename It::value_type		value_type;
+			typedef typename It::value_type			value_type;
 			typedef typename It::difference_type	difference_type;
 			typedef typename It::pointer			pointer;
 			typedef typename It::reference			reference;
-			typedef typename It::iterator_category iterator_category;
+			typedef typename It::iterator_category	iterator_category;
 
 	};
 
@@ -54,8 +54,8 @@ namespace	ft
 			typedef typename	std::random_access_iterator_tag	iterator_category;
 			typedef				It								value_type;
 			typedef				ptrdiff_t						difference_type;
-			typedef				It*							pointer;
-			typedef				It&							reference;
+			typedef				It*								pointer;
+			typedef				It&								reference;
 
 	};
 
@@ -105,7 +105,7 @@ namespace	ft
 				
 				// Construction :
 				It_reverse() { } // default constructor
-				explicit It_reverse(iterator_type it):_current_it(it) { } // Constructs a reverse iterator from some orginal iterator it(biderictional or random)
+				It_reverse(iterator_type it):_current_it(it) { } // Constructs a reverse iterator from some orginal iterator it(biderictional or random)
 				template <typename new_it>
 				It_reverse(const It_reverse<new_it>& rev_it) 
 				{
