@@ -1,5 +1,6 @@
-# include <iostream>
+// # include <iostream>
 # include <vector>
+# include "_iter_.hpp"
 
 int main()
 {
@@ -11,8 +12,8 @@ int main()
 		array_int.push_back(i);
 	typedef vector<int>::iterator _iter;
 
-	reverse_iterator<_iter> _revEnd(array_int.begin());
-	reverse_iterator<_iter> _revBeg(array_int.end());
+	ft::_reverseIter<_iter> _revEnd(array_int.begin());
+	ft::_reverseIter<_iter> _revBeg(array_int.end());
 
 	_iter it = _revBeg.base();
 	it--; // we need to decrement first cuz the last element is not defined ....

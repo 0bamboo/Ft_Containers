@@ -6,14 +6,16 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:12:11 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/12/30 15:15:47 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/01 01:54:25 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
+
 # include <iostream>
-# include <iterator>
+// # include <iterator>
+# include "_iter_.hpp"
 
 namespace	ft
 {
