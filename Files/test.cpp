@@ -11,7 +11,6 @@ int main()
 	for (int i = 0; i < 5; i++)
 		array_int.push_back(i);
 	typedef vector<int>::iterator _iter;
-
 	ft::_reverseIter<_iter> _revEnd(array_int.begin());
 	ft::_reverseIter<_iter> _revBeg(array_int.end());
 

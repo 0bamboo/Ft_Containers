@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/01 18:37:30 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/01 20:01:21 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/02 01:38:29 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
 
 namespace ft
 {
+	// dispatch tag so i think this tags is used when u want to redirect the call of template class to a specific one 
 	template<bool Cond, class T = void>
-	struct enable_if { };
-	 
+	struct enable_if { }; // if the condition u give it is true then u allowed to consider the template that u want to use so in this case our condition is defined by is_integral tag
+	 //SFINAE : SUSBTITUTION FAILURE IS  NOT AN ERROR  == in general we use this for turn on and off some templates 
 	template<class T>
 	struct enable_if<true, T>
 	{
@@ -28,100 +29,37 @@ namespace ft
 
 	/* is_integral */
 	template <class T>
-	struct is_integral
-	{
-		static const bool value = false;
-	};
-	/* bool */
+	struct is_integral { static const bool value = false; };
 	template <>
-	struct is_integral<bool>
-	{
-		static const bool value = true;
-	};
-	/* char */ 
+	struct is_integral<bool> { static const bool value = true; };
 	template <>
-	struct is_integral<char>
-	{
-		static const bool value = true;
-	};
-	/* wchar_t */
+	struct is_integral<char> { static const bool value = true; };
 	template <>
-	struct is_integral<wchar_t>
-	{
-		static const bool value = true;
-	};
-	/* char16_t */
+	struct is_integral<wchar_t> { static const bool value = true; };
 	template <>
-	struct is_integral<char16_t>
-	{
-		static const bool value = true;
-	};
-	/* char32_t */
+	struct is_integral<char16_t> { static const bool value = true; };
 	template <>
-	struct is_integral<char32_t>
-	{
-		static const bool value = true;
-	};
-	/* signed char */
+	struct is_integral<char32_t> { static const bool value = true; };
 	template <>
-	struct is_integral<signed char>
-	{
-		static const bool value = true;
-	};
-	/* short int */
+	struct is_integral<signed char> { static const bool value = true; };
 	template <>
-	struct is_integral<short int>
-	{
-		static const bool value = true;
-	};
-	/* int */
+	struct is_integral<short int> { static const bool value = true; };
 	template <>
-	struct is_integral<int>
-	{
-		static const bool value = true;
-	};
-	/* long int */
+	struct is_integral<int> { static const bool value = true; };
 	template <>
-	struct is_integral<long int>
-	{
-		static const bool value = true;
-	};
-	/* long long int */
+	struct is_integral<long int> { static const bool value = true; };
 	template <>
-	struct is_integral<long long int>
-	{
-		static const bool value = true;
-	};
-	/* unsigned  char */
+	struct is_integral<long long int> { static const bool value = true; };
 	template <>
-	struct is_integral<unsigned char>
-	{
-		static const bool value = true;
-	};
-	/* unsigned short int */
+	struct is_integral<unsigned char> { static const bool value = true; };
 	template <>
-	struct is_integral<unsigned short int>
-	{
-		static const bool value = true;
-	};
-	/* unsigned int */
+	struct is_integral<unsigned short int> { static const bool value = true; };
 	template <>
-	struct is_integral<unsigned int>
-	{
-		static const bool value = true;
-	};
-	/* unsigned long int */
+	struct is_integral<unsigned int> { static const bool value = true; };
 	template <>
-	struct is_integral<unsigned long int>
-	{
-		static const bool value = true;
-	};
-	/* unsigned long long int */
+	struct is_integral<unsigned long int> { static const bool value = true; };
 	template <>
-	struct is_integral<unsigned long long int>
-	{
-		static const bool value = true;
-	};
+	struct is_integral<unsigned long long int> { static const bool value = true; };
 	
 }
 

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:54:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/01 01:49:39 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/02 00:49:51 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ namespace	ft
 	class iterator{
 		
 		public:
-			typedef T         value_type;		// Type  of elements ponted by the iterator.
+			typedef T         value_type;		// Type  of elements pointed by the iterator.
 			typedef Distance  difference_type;	// Type to represent the difference between two iterators
 			typedef Pointer   pointer;			// Type to represent a pointer to an element poited by the iterator
 			typedef Reference reference;		// Type to represent a reference to an element pointed by the iterator
@@ -81,11 +81,12 @@ namespace	ft
 			typedef typename	iterator_traits<It>::difference_type	difference_type;
 			
 			// Construction :
-			_vectorIter():_current_it(It()) { }
+			_vectorIter():_current_it() { }
 			_vectorIter(It& _it) : _current_it(_it) { }
 			_vectorIter(const It& _it) : _current_it(_it) { }
 			template <typename Iter>
 			_vectorIter(const _vectorIter<Iter>& _it) : _current_it(_it.base()) { }
+			~_vectorIter() { } // Destructor
 			
 			
 			const iterator_type&	base() const { return (this->_current_it); } 
@@ -239,7 +240,9 @@ namespace	ft
 				_reverseIter(iterator_type it):_current_it(it) { } // Constructs a reverse iterator from orginal iterator it(biderictional or random)
 				template <typename new_it>
 				_reverseIter(const _reverseIter<new_it>& rev_it):_current_it(rev_it.base()) { } // Construct with the iterator of rev_it
+				~_reverseIter() { } // Destructor
 
+				
 				// Base(): returns a copy of the base iterator .
 				iterator_type&	base() const { return (this->_current_it); } 
 
