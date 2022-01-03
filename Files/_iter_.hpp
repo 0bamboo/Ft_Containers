@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:54:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/02 00:49:51 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/03 17:56:39 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ namespace	ft
 		public:
 			typedef T         value_type;		// Type  of elements pointed by the iterator.
 			typedef Distance  difference_type;	// Type to represent the difference between two iterators
-			typedef Pointer   pointer;			// Type to represent a pointer to an element poited by the iterator
+			typedef Pointer   pointer;			// Type to represent a pointer to an element pointed by the iterator
 			typedef Reference reference;		// Type to represent a reference to an element pointed by the iterator
 			typedef Category  iterator_category;// Category to which the iterator belongs to (random - input_iterator - bidirectional - ...)
 	};
@@ -52,7 +52,7 @@ namespace	ft
 		public:
 			typedef typename	std::random_access_iterator_tag	iterator_category;
 			typedef				It								value_type;
-			typedef				std::ptrdiff_t						difference_type;
+			typedef				std::ptrdiff_t					difference_type;
 			typedef				It*								pointer;
 			typedef				It&								reference;
 
@@ -64,7 +64,7 @@ namespace	ft
 		
 		typedef typename	std::random_access_iterator_tag	iterator_category;
 		typedef				It								value_type;
-		typedef				std::ptrdiff_t						difference_type;
+		typedef				std::ptrdiff_t					difference_type;
 		typedef				const It*						pointer;
 		typedef				const It&						reference;
 		
@@ -89,7 +89,7 @@ namespace	ft
 			~_vectorIter() { } // Destructor
 			
 			
-			const iterator_type&	base() const { return (this->_current_it); } 
+			iterator_type	base() const { return (this->_current_it); } 
 
 			// Dereference iterator : 
 			reference	operator*() const
@@ -244,7 +244,7 @@ namespace	ft
 
 				
 				// Base(): returns a copy of the base iterator .
-				iterator_type&	base() const { return (this->_current_it); } 
+				iterator_type	base() const { return (this->_current_it); } 
 
 				// Dereference iterator : 
 				reference	operator*() const
