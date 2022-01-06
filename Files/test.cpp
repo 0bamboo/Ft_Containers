@@ -15,15 +15,33 @@ int main()
 	// cout << array_int.max_size() << "\n" << array_str.max_size() << "\n" \
 	// << array_char.max_size() <<"\n"<< vec_long.max_size() << endl;
 	// std::cout << numeric_limits<long>::max() << endl;
-  try {
-    // vector throws a length_error if resized above max_size
-    std::vector<int> myvector;
-    myvector.resize(myvector.max_size()+1);
-  }
-  catch (const std::length_error& le) {
-	  std::cerr << "Length error: " << le.what() << '\n';
-  }
-	// for (int i = 0; i < 5; i++)
+	// std::vector<int> test;
+	// for (int i = 0; i < 3; i++)
+	// 	test.push_back(i);
+	// for (unsigned long i = 0; i < test.size(); i++)
+	// 	std::cout << test[i] << " | ";
+	// test.assign(0, 88);
+	// std::cout << std::endl <<test.capacity() << std::endl;
+	// for (unsigned long i = 0; i < test.size(); i++)
+	// 	std::cout << test[i] << " | ";
+	// // test.clear();
+	// std::cout << std::endl <<test.capacity() <<" || "<< test.size()<< std::endl;
+	std::vector<int> _vec;
+	_vec.push_back(3);
+	_vec.push_back(3);
+	_vec.push_back(3);
+	std::cout << "size and capacity : " << _vec.size() << " | " << _vec.capacity() << std::endl;
+	_vec.insert(_vec.begin(), 4);
+	_vec.insert(_vec.begin(), 2);
+	size_t j = 0;
+	for (size_t i= 0; j < _vec.size(); j++,i++)
+		std::cout << _vec[j] << " | ";
+	std::cout << std::endl;
+	// _vec.pop_back();
+	// _vec.pop_back();
+
+	std::cout << "size and capacity : " << _vec.size() << " | " << _vec.capacity() << std::endl;
+
 	// 	array_int.push_back(i);
 	// typedef vector<int>::iterator _iter;
 	// ft::_reverseIter<_iter> _revEnd(array_int.begin());
