@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:12:11 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/04 18:47:45 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/05 22:31:04 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,9 @@ namespace	ft
 					pointer		_newData_ = this->_alloctype_.allocate(this->_capacity_);
 					for (int i = 0; i < this->_size_; i++)
 						this->_alloctype_.construct(_newData_, this->_data_[i]);
-					this->_alloctype_.deallocate(this->_data_, this->_capacity_);
+					if (this->_size_)
+						this->_alloctype_.deallocate(this->_data_, this->_capacity_);
+					this->_capacity_ = _newCap_;
 					this->_data_ = _newData_;
 				}
 			} // Requests a change in capacity.
@@ -117,7 +119,8 @@ namespace	ft
 					pointer		_newD_ = this->_alloctype_.allocate(n);
 					for (int i = 0; i < n; i++)
 						_newD_[i] = this->_data_[i];
-					this->_alloctype_.deallocate(this->_data_, this->_capacity_);
+					if (this->_size_)
+						this->_alloctype_.deallocate(this->_data_, this->_capacity_);
 				}
 			} // Resize the container so that it contains n elements. 
 			// --------- }
