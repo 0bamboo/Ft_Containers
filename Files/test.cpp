@@ -5,51 +5,34 @@
 
 int main()
 {
-	// using namespace std;
+	// -------------------- DUMB TESTS : ------------------------
 
-	// vector<int> array_int;
-	// vector<string> array_str;
-	// vector<char> array_char;
-	// vector<long> vec_long;
+	// assign :
+	std::vector<std::string> _str(4, "hello world");
+	std::vector<int> _int(4, 98);
 
-	// cout << array_int.max_size() << "\n" << array_str.max_size() << "\n" \
-	// << array_char.max_size() <<"\n"<< vec_long.max_size() << endl;
-	// std::cout << numeric_limits<long>::max() << endl;
-	// std::vector<int> test;
-	// for (int i = 0; i < 3; i++)
-	// 	test.push_back(i);
-	// for (unsigned long i = 0; i < test.size(); i++)
-	// 	std::cout << test[i] << " | ";
-	// test.assign(0, 88);
-	// std::cout << std::endl <<test.capacity() << std::endl;
-	// for (unsigned long i = 0; i < test.size(); i++)
-	// 	std::cout << test[i] << " | ";
-	// // test.clear();
-	// std::cout << std::endl <<test.capacity() <<" || "<< test.size()<< std::endl;
-	std::vector<int> _vec;
-	_vec.push_back(3);
-	_vec.push_back(3);
-	_vec.push_back(3);
-	std::cout << "size and capacity : " << _vec.size() << " | " << _vec.capacity() << std::endl;
-	_vec.insert(_vec.begin(), 4);
-	_vec.insert(_vec.begin(), 2);
-	size_t j = 0;
-	for (size_t i= 0; j < _vec.size(); j++,i++)
-		std::cout << _vec[j] << " | ";
-	std::cout << std::endl;
-	// _vec.pop_back();
-	// _vec.pop_back();
-
-	std::cout << "size and capacity : " << _vec.size() << " | " << _vec.capacity() << std::endl;
-
-	// 	array_int.push_back(i);
-	// typedef vector<int>::iterator _iter;
-	// ft::_reverseIter<_iter> _revEnd(array_int.begin());
-	// ft::_reverseIter<_iter> _revBeg(array_int.end());
-
-	// _iter it = _revBeg.base();
-	// it--; // we need to decrement first cuz the last element is not defined ....
-	// for( ; it != _revEnd.base() ; --it)
-	// 	cout << " " << *it << endl;
+	std::cout << _str[0] << " | " << _str[3] << " | " << _str.size() << std::endl;
+	std::cout << _int[0] << " | " << _int[3] << " | " << _int.size() << std::endl;
+	std::cout << std::endl << "--------------------------------" << std::endl;
+	std::cout << "assign =  fill version using size and value of the new str" << std::endl;
+	_str.assign(6, "Changed");
+	_int.assign(0, 99);
+	std::cout << _str[0] << " | " << _str[3] << " | " << _str.size() << std::endl;
+	std::cout << std::endl << "--------------------------------" << std::endl;
+	std::cout << _int[0] << " | " << _int[3] << " | " << _int.size() << std::endl;
+	std::vector<std::string>::iterator it = _str.begin();
+	std::vector<int>::iterator	_int_it = _int.begin();
+	std::cout << std::endl << "--------------------------------" << std::endl;
+	std::cout << "assign = range version" << std::endl;
+	_str.assign(it, it + 2);
+	_int.assign(_int_it, _int_it + 1);
+	std::cout << std::endl << "--------------------------------" << std::endl;
+	for (;it != _str.end(); it++)
+		std::cout << _str[it - _str.begin()] << " | " ;
+	std::cout <<std::endl<< "========> size = " << _str.size() << std::endl;
+	std::cout << std::endl << "--------------------------------" << std::endl;
+	for (;_int_it != _int.end(); _int_it++)
+		std::cout << _int[_int_it - _int.begin()] << " | ";
+	std::cout <<std::endl<< "========> size = " << _int.size() << std::endl;
 	return 0;
 }

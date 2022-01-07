@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:12:11 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/07 13:30:54 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/07 17:38:24 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,26 +46,22 @@ namespace	ft
 			allocator_type	_alloctype_;
 			pointer			_data_;
 
-			// Reallocate:
-			void	_reallocate_(size_type	_newS_)
-			{
-				
-			}
-		
 		public:
 			// Constructors
 			explicit vector(const allocator_type& alloc = allocator_type()) : 
 			_size_(0), _capacity_(0),_alloctype_(alloc), _data_(nullptr) { } // default constructor
+			
 			explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):
 			_size_(0), _capacity_(0), _alloctype_(alloc), _data_(nullptr)
 			{
 				this->assign(n, val);
 			} // fill constructor
+			
 			vector(const vector& obj)
 			{
-				if (this != &obj)
-					*this = obj;
+				*this = obj;
 			} // Copy constructor
+			
 			template<typename _inputIter>
 			vector(_inputIter _first, _inputIter _last, const allocator_type& alloc = allocator_type()) :
 			_size_(0), _capacity_(0), _alloctype_(alloc), _data_(nullptr)
@@ -186,9 +182,10 @@ namespace	ft
 			// Assign vector content:
 			void	assign(size_type n, const value_type& val)
 			{
-				if (n == 0)
-					this->clear();
-				else if (n >= this->_capacity_)
+				// maybe this condition is not necessary :
+				// if (n == 0)
+				// 	this->clear();
+				if (n >= this->_capacity_)
 				{
 					size_type	_oldC_ = this->_capacity_;
 					this->_capacity_ = n;
@@ -215,9 +212,9 @@ namespace	ft
 			{
 				size_type	_length_ = _last - _first;
 				
-				if (_length_ == 0)
-					this->clear();
-				else if (_length_ >= this->_capacity_)
+				// if (_length_ == 0)
+				// 	this->clear();
+				if (_length_ >= this->_capacity_)
 				{
 					size_type	_oldC_ = this->_capacity_;
 					this->_capacity_ = _length_;
@@ -449,10 +446,57 @@ namespace	ft
 				this->_size_ -= _deleteSize_;
 				return (iterator(this->_data_ + idx));
 			}
-			
 			// ------------}
-	};
-	// END! Vector 
+	}; // END! Vector 
+
+	// Non-Member functions overloads : { ------------------
+	
+	// Relational operators :
+	template <typename _T, typename Alloc>
+	bool	operator == (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
+	{
+		return (_left.size() == _right.size() && ft::equal(_left.begin(), _left.end(), _right.begin()));
+	}
+	
+	template <typename _T, typename Alloc>
+	bool	operator != (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
+	{
+		return (!(_left == _right));
+	}
+	
+	template <typename _T, typename Alloc>
+	bool	operator > (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
+	{
+		return (ft::lexicographical_compare(_left.begin(), _left.end(), _right.begin(), _right.end()));
+	}
+	
+	template <typename _T, typename Alloc>
+	bool	operator >= (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
+	{
+		return (!(_left < _right));
+	}
+	
+	template <typename _T, typename Alloc>
+	bool	operator < (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
+	{
+		return (_right > _left);
+	}
+	
+	template <typename _T, typename Alloc>
+	bool	operator <= (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
+	{
+		return (!(_right < _left));
+	}
+
+	// Function template of Swap :
+	template <typename _T, typename Alloc>
+	void	swap(vector<_T, Alloc>& _a, vector<_T, Alloc>& _b)
+	{
+		std::swap(_a, _b);
+	}
+	
+	// ----------------- }
+
 } // END! ft namespace
 
 #endif
