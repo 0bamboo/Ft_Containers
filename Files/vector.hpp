@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:12:11 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/07 17:38:24 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/09 18:44:27 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,15 @@ namespace	ft
 			typedef					T									value_type;
 			typedef					Alloc								allocator_type;
 			typedef	typename 		Alloc::reference					reference;
-			typedef typename 		Alloc::const_reference				c_reference;
+			typedef typename 		Alloc::const_reference				const_reference;
 			typedef typename 		Alloc::pointer						pointer;
-			typedef typename 		Alloc::const_pointer				c_pointer;
+			typedef typename 		Alloc::const_pointer				const_pointer;
 			typedef					_vectorIter<pointer>				iterator;
-			typedef					_vectorIter<c_pointer>				c_iterator;
-			typedef	typename		ft::_reverseIter<iterator>			rev_iterator;
-			typedef typename		ft::_reverseIter<c_iterator>		c_rev_iterator;
+			typedef					_vectorIter<const_pointer>			const_iterator;
+			typedef	typename		ft::_reverseIter<iterator>			reverse_iterator;
+			typedef typename		ft::_reverseIter<const_iterator>	const_reverse_iterator;
 			typedef					std::ptrdiff_t						difference_type;
-			typedef	typename		allocator_type::size_t				size_type;
+			typedef	typename		Alloc::size_type					size_type;
 		
 		private:
 			size_type		_size_;
@@ -63,7 +63,8 @@ namespace	ft
 			} // Copy constructor
 			
 			template<typename _inputIter>
-			vector(_inputIter _first, _inputIter _last, const allocator_type& alloc = allocator_type()) :
+			vector(_inputIter _first, _inputIter _last, const allocator_type& alloc = allocator_type(),
+			typename enable_if<!is_integral<_inputIter>::value, bool>::type = true) :
 			_size_(0), _capacity_(0), _alloctype_(alloc), _data_(nullptr)
 			{
 				this->assign(_first, _last);
@@ -88,7 +89,7 @@ namespace	ft
 			~vector()
 			{
 				this->clear();
-				this->_alloctype_.deallocate(&this->_data_, this->_capacity_);
+				this->_alloctype_.deallocate(this->_data_, this->_capacity_);
 				this->_capacity_ = 0;
 			}
 			
@@ -96,17 +97,17 @@ namespace	ft
 			// Iterators: { ---------
 			// Normal iterators: 
 			iterator		begin() { return (iterator(_data_)); }
-			c_iterator		begin() const { return (c_iterator(_data_)); }
+			const_iterator		begin() const { return (const_iterator(_data_)); }
 
 			iterator		end() { return (iterator(_data_ + this->_size_)); }
-			c_iterator		end() const { return (c_iterator(_data_ + this->_size_)); }
+			const_iterator		end() const { return (const_iterator(_data_ + this->_size_)); }
 			
 			// Reverse Iterators:
-			rev_iterator	rbegin() { return (rev_iterator(this->end())); }
-			c_rev_iterator	rbegin() const { return (c_rev_iterator(this->end())); }
+			reverse_iterator	rbegin() { return (reverse_iterator(this->end())); }
+			const_reverse_iterator	rbegin() const { return (const_reverse_iterator(this->end())); }
 
-			rev_iterator	rend() { return (rev_iterator(this->begin())); }
-			c_rev_iterator	rend() const { return (c_rev_iterator(this->begin())); }
+			reverse_iterator	rend() { return (reverse_iterator(this->begin())); }
+			const_reverse_iterator	rend() const { return (const_reverse_iterator(this->begin())); }
 			// --------- }
 
 			// Size and capacity { --------- :
@@ -126,7 +127,7 @@ namespace	ft
 						this->_alloctype_.construct(&_newData_[i], this->_data_[i]);
 					if (this->_size_)
 						this->_alloctype_.deallocate(this->_data_, this->_capacity_);
-					this->_capacity = _newCap_;
+					this->_capacity_ = _newCap_;
 					this->_data_ = _newData_;
 				}
 			} // Requests a change in capacity.
@@ -153,7 +154,7 @@ namespace	ft
 			// Element Access : ----------- {
 
 			reference	operator [](size_type i) { return (this->_data_[i]); }
-			c_reference	operator [](size_type i) const { return (this->_data_[i]); }
+			const_reference	operator [](size_type i) const { return (this->_data_[i]); }
 
 			reference	at(size_type i)
 			{
@@ -162,7 +163,7 @@ namespace	ft
 				return (this->_data_[i]);
 			}
 
-			c_reference	at(size_type i) const
+			const_reference	at(size_type i) const
 			{
 				if (i >= this->_size_)
 					throw (std::out_of_range("Vector"));
@@ -170,10 +171,10 @@ namespace	ft
 			}
 
 			reference	front() { return (*this->_data_); }
-			c_reference	front() const { return (*this->_data_); }
+			const_reference	front() const { return (*this->_data_); }
 
 			reference	back() { return (*(this->_data_ + this->_size_ - 1)); }
-			c_reference	back() const { return (*(this->_data_ + this->_size_ - 1)); }
+			const_reference	back() const { return (*(this->_data_ + this->_size_ - 1)); }
 			
 			// ------------- }
 
@@ -198,24 +199,30 @@ namespace	ft
 				}
 				else
 				{
-					for (int i = 0; i < n; i++)
+					std::cout << "In\n"; 
+					for (size_type i = 0; i < n; i++)
 					{
 						this->_alloctype_.destroy(&this->_data_[i]);
 						this->_alloctype_.construct(&this->_data_[i], val);
 					}
 					this->_size_ = n;
 				}
+				
 			}// Fill Version.
 			
 			template <typename _inputIter>
-			void	assign(_inputIter _first, _inputIter _last)
+			void	assign(_inputIter _first, _inputIter _last,
+			typename enable_if<!is_integral<_inputIter>::value, bool>::type = true)
 			{
-				size_type	_length_ = _last - _first;
+				difference_type	_length_ = _last - _first;
+				if (_length_ < 0)
+					return ;
 				
 				// if (_length_ == 0)
 				// 	this->clear();
-				if (_length_ >= this->_capacity_)
+				if ((size_type)_length_ >= this->_capacity_)
 				{
+					std::cout << "In\n"; 
 					size_type	_oldC_ = this->_capacity_;
 					this->_capacity_ = _length_;
 					pointer		_newData_ = this->_alloctype_.allocate(this->_capacity_);
@@ -224,6 +231,8 @@ namespace	ft
 					if (this->_size_)
 						this->_alloctype_.deallocate(this->_data_, _oldC_);
 					this->_data_ = _newData_;
+					// fix this********************************************************************************
+					this->_size_ = _length_;
 				}
 				else
 				{
@@ -234,6 +243,11 @@ namespace	ft
 					}
 					this->_size_ = _length_;
 				}
+				iterator it = this->begin();
+				std::cout << "Inside assign range: " << *it << " | " << *(this->end())<< std::endl;
+				for ( ;it != this->end(); it++)
+					std::cout << "[" << *it << "] ";
+				std::cout << std::endl;
 			}// Range Version.
 			
 			
@@ -255,7 +269,7 @@ namespace	ft
 			// Destroy all the content of the vector :
 			void	clear()
 			{
-				for(int i = 0; i < this->_size_; i++)
+				for(size_type i = 0; i < this->_size_; i++)
 					this->_alloctype_.destroy(&this->_data_[i]);
 				this->_size_ = 0;
 			}
@@ -277,13 +291,13 @@ namespace	ft
 					while (i < this->_size_)
 					{
 						// 1 2 3 4 === 7 7 7 7 idx=1== > 1 7 7 7 7 3 4
-						if (i == idx && _nElem)
+						if (i == (size_type)idx && _nElem)
 						{
 							this->_alloctype_.construct(&_newData_[j++], value);
 							_nElem--;
 						}
 						else
-							this->_alloctype.construct(&_newData_[j++], this->_data_[i++]);
+							this->_alloctype_.construct(&_newData_[j++], this->_data_[i++]);
 						// if (_nElem == 0 && i )
 						// 	break ;
 					}
@@ -295,14 +309,14 @@ namespace	ft
 					j = this->_size_;
 					while (--j >= 0)
 					{
-						if (j == (idx + _nElem - 1))
+						if (j == (size_type)(idx + _nElem - 1))
 						{
 							this->_alloctype_.construct(&this->_data_[j], value);
 							_nElem--;
 						}
 						else
 							this->_alloctype_.construct(&this->_data_[j], this->_data_[j - _nElem]);
-						if (idx == j)
+						if ((size_type)idx == j)
 							break ;
 					}
 				}
@@ -321,14 +335,14 @@ namespace	ft
 					pointer		_newData_ = this->_alloctype_.allocate(_newCap_);
 					for (size_type i = 0; i < this->_size_; i++)
 					{
-						if (i == idx)
+						if (i == (size_type)idx)
 							this->_alloctype_.construct(&_newData_[i], value);
 						else
 							this->_alloctype_.construct(&_newData_[i], this->_data_[j++]);
 					}
 					if (this->_size_)
 						this->_alloctype_.deallocate(this->_data_, this->_capacity_);
-					this->_capacity = _newCap_;
+					this->_capacity_ = _newCap_;
 					this->_data_ = _newData_;
 				}
 				else
@@ -336,7 +350,7 @@ namespace	ft
 					j = this->_size_++;
 					while (j-- >= 0)
 					{
-						if (j == idx)
+						if (j == (size_type)idx)
 						{
 							this->_alloctype_.construct(&this->_data_[j], value);
 							break ;
@@ -350,7 +364,8 @@ namespace	ft
 
 			// Range :
 			template <typename _inputIter>
-			void	insert(iterator _pos, _inputIter _first, _inputIter _last)
+			void	insert(iterator _pos, _inputIter _first, _inputIter _last,
+			typename enable_if<!is_integral<_inputIter>::value, bool>::type = true)
 			{
 				difference_type idx = _pos - this->begin();
 				difference_type _rangeS_ = _last - _first;
@@ -365,13 +380,13 @@ namespace	ft
 					while (i < this->_size_)
 					{
 						// 1 2 3 4 === 7 7 7 7 idx=1== > 1 7 7 7 7 3 4
-						if (i == idx && _rangeS_)
+						if (i == (size_type)idx && _rangeS_)
 						{
 							this->_alloctype_.construct(&_newData_[j++], *_first++);
 							_rangeS_--;
 						}
 						else
-							this->_alloctype.construct(&_newData_[j++], this->_data_[i++]);
+							this->_alloctype_.construct(&_newData_[j++], this->_data_[i++]);
 						// if (_rangeS_ == 0 && i )
 						// 	break ;
 					}
@@ -383,14 +398,14 @@ namespace	ft
 					j = this->_size_;
 					while (--j >= 0)
 					{
-						if (j == (idx + _rangeS_ - 1))
+						if (j == (size_type)(idx + _rangeS_ - 1))
 						{
 							this->_alloctype_.construct(&this->_data_[j], *--_last);
 							_rangeS_--;
 						}
 						else
 							this->_alloctype_.construct(&this->_data_[j], this->_data_[j - _rangeS_]);
-						if (idx == j)
+						if ((size_type)idx == j)
 							break ;
 					}
 				}
@@ -418,7 +433,7 @@ namespace	ft
 				size_type i = 0, j = 0;
 				while (i < this->_size_)
 				{
-					if (i == idx)
+					if (i == (size_type)idx)
 						this->_alloctype_.destroy(&this->_data_[i++]);
 					this->_alloctype_.construct(&this->_data_[j++], this->_data_[i++]);
 				}
@@ -436,7 +451,7 @@ namespace	ft
 				size_type i = 0, j = 0;
 				while (i < this->_size_)
 				{
-					if (idx == i)
+					if ((size_type)idx == i)
 					{
 						for (; _first != _last; _first++)
 							this->_alloctype_.destroy(&this->_data_[i++]);

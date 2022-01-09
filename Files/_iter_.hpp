@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:54:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/03 17:56:39 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/09 17:47:23 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,18 +61,19 @@ namespace	ft
 	//Iterator traits for const pointer types :
 	template <typename It>
 	class	iterator_traits<const It*>{
-		
-		typedef typename	std::random_access_iterator_tag	iterator_category;
-		typedef				It								value_type;
-		typedef				std::ptrdiff_t					difference_type;
-		typedef				const It*						pointer;
-		typedef				const It&						reference;
+
+		public:
+			typedef typename	std::random_access_iterator_tag	iterator_category;
+			typedef				It								value_type;
+			typedef				std::ptrdiff_t					difference_type;
+			typedef				const It*						pointer;
+			typedef				const It&						reference;
 		
 	};
 
 	template <typename It>
 	class _vectorIter : public iterator<std::random_access_iterator_tag, typename iterator_traits<It>::value_type> {
-
+		
 		public:
 			// Typedefs :
 			typedef				It										iterator_type;
@@ -80,6 +81,10 @@ namespace	ft
 			typedef typename	iterator_traits<It>::reference			reference;
 			typedef typename	iterator_traits<It>::difference_type	difference_type;
 			
+		private:
+			iterator_type	_current_it;
+		
+		public:
 			// Construction :
 			_vectorIter():_current_it() { }
 			_vectorIter(It& _it) : _current_it(_it) { }
@@ -110,8 +115,6 @@ namespace	ft
 			}
 
 			// Increment iterator position : {
-			// pre-increment :
-			_vectorIter&	operator++() { return (++(*this)); }
 			// post-increment :
 			_vectorIter	operator++(int)
 			{
@@ -120,11 +123,15 @@ namespace	ft
 				++(*this);
 				return (tmp);
 			}
+			
+			// pre-increment :
+			_vectorIter&	operator++() {
+				_current_it++;
+				return *this;
+			 }
 			//}
 			
 			// Decrement iterator position : {
-			// pre-decrement :
-			_vectorIter&	operator--() { return (--(*this)); }
 			// post-decrement :
 			_vectorIter	operator--(int)
 			{
@@ -133,6 +140,12 @@ namespace	ft
 				--(*this);
 				return (tmp);
 			}
+			
+			// pre-decrement :
+			_vectorIter&	operator--() { 
+				_current_it--;
+				return *this;
+			 }
 			//}
 
 			// Advance iterator : decreases the rev_iter by _diff elements positions
@@ -152,7 +165,7 @@ namespace	ft
 			// Dereference iterator : returns a pointer to the element pointer to by the iterator (in order to access one of its members.)
 			pointer	operator->() const
 			{
-				return (_current_it);
+				return &(operator*());
 			}
 			
 			// Dereference iterator with offset :
@@ -161,45 +174,43 @@ namespace	ft
 				return (*(*this + _diff));
 			}
 		
-		private:
-			iterator_type	_current_it;
 	};
 	// NON-MEMBER FUNCTIONS OVERLOADS
 
 	// Relational operators :
 	
-	template <typename Iter>
-	bool	operator == (const _vectorIter<Iter>& _left, const _vectorIter<Iter>& _right)
+	template <typename Iter, typename Iter1>
+	bool	operator == (const _vectorIter<Iter>& _left, const _vectorIter<Iter1>& _right)
 	{
 		return (_left.base() == _right.base());
 	}
 
-	template <typename Iter>
-	bool	operator != (const _vectorIter<Iter>& _left, const _vectorIter<Iter>& _right)
+	template <typename Iter, typename Iter1>
+	bool	operator != (const _vectorIter<Iter>& _left, const _vectorIter<Iter1>& _right)
 	{
 		return (!(_left.base() == _right.base()));
 	}
 
-	template <typename Iter>
-	bool	operator < (const _vectorIter<Iter>& _left, const _vectorIter<Iter>& _right)
+	template <typename Iter, typename Iter1>
+	bool	operator < (const _vectorIter<Iter>& _left, const _vectorIter<Iter1>& _right)
 	{
 		return (_left.base() < _right.base());
 	}
 
-	template <typename Iter>
-	bool	operator > (const _vectorIter<Iter>& _left, const _vectorIter<Iter>& _right)
+	template <typename Iter, typename Iter1>
+	bool	operator > (const _vectorIter<Iter>& _left, const _vectorIter<Iter1>& _right)
 	{
 		return (_right.base() < _left.base());
 	}
 	
-	template <typename Iter>
-	bool	operator >= (const _vectorIter<Iter>& _left, const _vectorIter<Iter>& _right)
+	template <typename Iter, typename Iter1>
+	bool	operator >= (const _vectorIter<Iter>& _left, const _vectorIter<Iter1>& _right)
 	{
 		return (!(_left < _right));
 	}
 
-	template <typename Iter>
-	bool	operator <= (const _vectorIter<Iter>& _left, const _vectorIter<Iter>& _right)
+	template <typename Iter, typename Iter1>
+	bool	operator <= (const _vectorIter<Iter>& _left, const _vectorIter<Iter1>& _right)
 	{
 		return (!(_right < _left));
 	}
@@ -268,7 +279,12 @@ namespace	ft
 
 				// Increment iterator position : {
 				// pre-increment :
-				_reverseIter&	operator++() { return (--(*this)); }
+				_reverseIter&	operator++()
+				{ 
+					this->_current_it--;
+					return (*this);
+				}
+				
 				// post-increment :
 				_reverseIter	operator++(int)
 				{
@@ -280,8 +296,6 @@ namespace	ft
 				//}
 				
 				// Decrement iterator position : {
-				// pre-decrement :
-				_reverseIter&	operator--() { return (++(*this)); }
 				// post-decrement :
 				_reverseIter	operator--(int)
 				{
@@ -289,6 +303,12 @@ namespace	ft
 					
 					++(*this);
 					return (tmp);
+				}
+				// pre-decrement :
+				_reverseIter&	operator--()
+				{ 
+					this->_current_it++;
+					return (*this);
 				}
 				//}
 

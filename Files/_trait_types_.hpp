@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/01 18:37:30 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/02 01:38:29 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/09 17:45:55 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 namespace ft
 {
-	// dispatch tag so i think this tags is used when u want to redirect the call of template class to a specific one 
+	// dispatch tag so i think these tags is used when u want to redirect the call of template class to a specific one 
 	template<bool Cond, class T = void>
 	struct enable_if { }; // if the condition u give it is true then u allowed to consider the template that u want to use so in this case our condition is defined by is_integral tag
 	 //SFINAE : SUSBTITUTION FAILURE IS  NOT AN ERROR  == in general we use this for turn on and off some templates 

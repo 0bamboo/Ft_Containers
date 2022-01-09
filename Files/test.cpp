@@ -2,37 +2,33 @@
 # include <stdexcept>
 # include <vector>
 # include "_iter_.hpp"
+# include "vector.hpp"
 
+void vector_iterator_test() {
+    std::string arr[] = {"1", "2", "3", "4", "5", "6"};
+    ft::vector<std::string> v(arr, arr + static_cast<int>(sizeof(arr) / sizeof(std::string)));
+    // ns::vector<std::string> v;
+    v.push_back("1");
+    v.push_back("2");
+    v.push_back("3");
+    v.push_back("4");
+    v.push_back("5");
+    ft::vector<std::string>::const_iterator it = v.begin();
+    ft::vector<std::string>::iterator ite = v.end();
+    for (; it != ite; it++)
+        std::cout << *it << std::endl; 
+    std::cout << "size of vector = " << v.size() << std::endl;
+    std::cout << "capacity of vector = " << v.capacity() << std::endl;
+    // ns::vector<std::string> vector_swap;
+    // for (int i = 0; i < 12; i++)
+    //     vector_swap.push_back("1");
+    // vector_swap = v;
+    // std::cout << "===========\n";
+    // std::cout << "size of vector_swap = " << vector_swap.size() << std::endl;
+    // std::cout << "capacity of vector_swap = " << vector_swap.capacity() << std::endl;
+}
 int main()
 {
 	// -------------------- DUMB TESTS : ------------------------
-
-	// assign :
-	std::vector<std::string> _str(4, "hello world");
-	std::vector<int> _int(4, 98);
-
-	std::cout << _str[0] << " | " << _str[3] << " | " << _str.size() << std::endl;
-	std::cout << _int[0] << " | " << _int[3] << " | " << _int.size() << std::endl;
-	std::cout << std::endl << "--------------------------------" << std::endl;
-	std::cout << "assign =  fill version using size and value of the new str" << std::endl;
-	_str.assign(6, "Changed");
-	_int.assign(0, 99);
-	std::cout << _str[0] << " | " << _str[3] << " | " << _str.size() << std::endl;
-	std::cout << std::endl << "--------------------------------" << std::endl;
-	std::cout << _int[0] << " | " << _int[3] << " | " << _int.size() << std::endl;
-	std::vector<std::string>::iterator it = _str.begin();
-	std::vector<int>::iterator	_int_it = _int.begin();
-	std::cout << std::endl << "--------------------------------" << std::endl;
-	std::cout << "assign = range version" << std::endl;
-	_str.assign(it, it + 2);
-	_int.assign(_int_it, _int_it + 1);
-	std::cout << std::endl << "--------------------------------" << std::endl;
-	for (;it != _str.end(); it++)
-		std::cout << _str[it - _str.begin()] << " | " ;
-	std::cout <<std::endl<< "========> size = " << _str.size() << std::endl;
-	std::cout << std::endl << "--------------------------------" << std::endl;
-	for (;_int_it != _int.end(); _int_it++)
-		std::cout << _int[_int_it - _int.begin()] << " | ";
-	std::cout <<std::endl<< "========> size = " << _int.size() << std::endl;
-	return 0;
+	vector_iterator_test();
 }
