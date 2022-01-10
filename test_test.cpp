@@ -100,13 +100,13 @@ void vector_iterator_test() {
         std::cout << *it << std::endl; 
     std::cout << "size of vector = " << v.size() << std::endl;
     std::cout << "capacity of vector = " << v.capacity() << std::endl;
-    // ns::vector<std::string> vector_swap;
-    // for (int i = 0; i < 12; i++)
-    //     vector_swap.push_back("1");
+    ns::vector<std::string> vector_swap;
+    for (int i = 0; i < 12; i++)
+        vector_swap.push_back("1");
     // vector_swap = v;
-    // std::cout << "===========\n";
-    // std::cout << "size of vector_swap = " << vector_swap.size() << std::endl;
-    // std::cout << "capacity of vector_swap = " << vector_swap.capacity() << std::endl;
+    std::cout << "===========\n";
+    std::cout << "size of vector_swap = " << vector_swap.size() << std::endl;
+    std::cout << "capacity of vector_swap = " << vector_swap.capacity() << std::endl;
 }
 void vector_capacity_test() {
     ns::vector<int> vector_int(10, 5);
@@ -146,7 +146,12 @@ void vector_modifiers_test() {
     std::cout << "==== assign range method ====\n";
     for (int i = 0; i < 10; i++)
         vector_range.push_back(i);
+    // ns::vector<int>::iterator  it = vector_range.begin();
+    // for (; it != vector_range.end(); it++)
+    //     std::cout << " | " <<*it<< " | ";
+    // std::cout << vector_range.end() - vector_range.begin() <<"\n";
     vector_int.assign(vector_range.begin(), vector_range.end());
+    std::cout <<"|"<< vector_int.size() <<"|"<< std::endl;
     std::cout << "vector_int size: " << vector_int.size() << std::endl;
     std::cout << "vector_int capacity: " << vector_int.capacity() << std::endl;
     std::cout << "==== assign method ====\n";
@@ -649,10 +654,10 @@ void vector_reverse_iterator_test() {
 
 int main() {
     // Vector
-    vector_iterator_test();
+    // vector_iterator_test();
     // vector_capacity_test();
     // vector_modifiers_test();
-    // vector_modifiers_second_test();
+    vector_modifiers_second_test();
     // vector_random_test();
     // vector_access_test();
     // vector_test_operations();

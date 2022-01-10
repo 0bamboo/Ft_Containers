@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:12:11 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/09 18:46:00 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/10 15:12:09 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,9 @@ namespace	ft
 				if (n > this->_capacity_)
 				{
 					size_type	_newCap_ = (this->_capacity_ * 2 >= n) ? this->_capacity_ * 2 : n;
-					pointer		_newData_ = this->_alloctype_.allocate(this->_capacity_);
+					// std::cout << "In -size- " << this->_size_ << " -capacity- " << this->_capacity_ << "-new Cap-"<< _newCap_<< std::endl; 
+					pointer		_newData_ = this->_alloctype_.allocate(_newCap_);
+					// std::cout << "Here " << std::endl;
 					for (size_type i = 0; i < this->_size_; i++)
 						this->_alloctype_.construct(&_newData_[i], this->_data_[i]);
 					if (this->_size_)
@@ -183,13 +185,10 @@ namespace	ft
 			// Assign vector content:
 			void	assign(size_type n, const value_type& val)
 			{
-				// maybe this condition is not necessary :
-				// if (n == 0)
-				// 	this->clear();
 				if (n >= this->_capacity_)
 				{
 					size_type	_oldC_ = this->_capacity_;
-					this->_capacity_ = n;
+					this->_capacity_ = this->_size_ = n;
 					pointer		_newData_ = this->_alloctype_.allocate(this->_capacity_);
 					for (size_type i = 0; i < this->_capacity_; ++i)
 						this->_alloctype_.construct(&_newData_[i], val);
@@ -199,7 +198,6 @@ namespace	ft
 				}
 				else
 				{
-					std::cout << "In\n"; 
 					for (size_type i = 0; i < n; i++)
 					{
 						this->_alloctype_.destroy(&this->_data_[i]);
@@ -215,39 +213,31 @@ namespace	ft
 			typename enable_if<!is_integral<_inputIter>::value, bool>::type = true)
 			{
 				difference_type	_length_ = _last - _first;
+				// std::cout <<_length_<< "im here \n";
 				if (_length_ < 0)
-					return ;
-				
-				// if (_length_ == 0)
-				// 	this->clear();
+					return ;// throw exception ?
 				if ((size_type)_length_ >= this->_capacity_)
 				{
-					std::cout << "In\n"; 
+					// u could add another condition here (== capacity)
+					// std::cout << "im in \n";
 					size_type	_oldC_ = this->_capacity_;
-					this->_capacity_ = _length_;
+					this->_capacity_ = this->_size_ = _length_;
 					pointer		_newData_ = this->_alloctype_.allocate(this->_capacity_);
-					for (int i = 0; _first != _last; ++i, ++_first)
+					for (size_type i = 0; _first != _last; ++i, ++_first)
 						this->_alloctype_.construct(&_newData_[i], *_first);
 					if (this->_size_)
 						this->_alloctype_.deallocate(this->_data_, _oldC_);
 					this->_data_ = _newData_;
-					// fix this********************************************************************************
-					this->_size_ = _length_;
 				}
 				else
 				{
-					for(int i = 0; _first < _last; ++i, ++_first)
+					for(size_type i = 0; _first < _last; ++i, ++_first)
 					{
 						this->_alloctype_.destroy(&this->_data_[i]);
 						this->_alloctype_.construct(&this->_data_[i], *_first);
 					}
 					this->_size_ = _length_;
 				}
-				iterator it = this->begin();
-				std::cout << "Inside assign range: " << *it << " | " << *(this->end())<< std::endl;
-				for ( ;it != this->end(); it++)
-					std::cout << "[" << *it << "] ";
-				std::cout << std::endl;
 			}// Range Version.
 			
 			
@@ -257,7 +247,14 @@ namespace	ft
 			void	push_back(const value_type& val)
 			{
 				this->reserve(this->_size_ + 1);
-				this->_alloctype_.construct(&this->_data_[this->_size_++ - 1], val); 
+				this->_alloctype_.construct(&this->_data_[this->_size_++], val);
+				// std::cout << "Im out\n";
+				// std::cout << "{ ";
+				// for (size_type i = 0; i < this->_size_; i++)
+				// {
+				// 	std::cout << this->_data_[i] << " - ";
+				// }
+				// std::cout << " } - size = "<< this->_size_ << "\n";
 			}
 
 			// Delete last element :
@@ -280,8 +277,8 @@ namespace	ft
 			void	insert(iterator _pos, size_type _nElem, const value_type& value)
 			{
 				difference_type idx = _pos - this->begin();
-				if (_nElem <= 0)
-					return ;
+				// if (idx < 0)
+				// 	throw std::out_of_range("vector");
 				size_type j = 0;
 				if (this->_size_ + _nElem > this->_capacity_)
 				{
@@ -326,8 +323,8 @@ namespace	ft
 			iterator	insert(iterator _pos, const value_type& value)
 			{
 				difference_type	idx = _pos - this->begin();
-					// if (idx < 0)
-					// 	throw ()
+				// if (idx < 0)
+				// 	throw std::out_of_range("vector");
 				size_type j = 0;
 				if (this->_size_++ > this->_capacity_)
 				{
@@ -369,8 +366,8 @@ namespace	ft
 			{
 				difference_type idx = _pos - this->begin();
 				difference_type _rangeS_ = _last - _first;
-				if (_rangeS_ <= 0)
-					return ;
+				if (_rangeS_ < 0)
+					throw std::out_of_range("vector");
 				size_type j = 0;
 				if (this->_size_ + _rangeS_ > this->_capacity_)
 				{
@@ -380,6 +377,7 @@ namespace	ft
 					while (i < this->_size_)
 					{
 						// 1 2 3 4 === 7 7 7 7 idx=1== > 1 7 7 7 7 3 4
+						// try to check that first != end rather decrementing rangeS
 						if (i == (size_type)idx && _rangeS_)
 						{
 							this->_alloctype_.construct(&_newData_[j++], *_first++);
@@ -390,6 +388,7 @@ namespace	ft
 						// if (_rangeS_ == 0 && i )
 						// 	break ;
 					}
+					// this is wrong !!!!!!!!!!!!!!!!!!!!!!
 					this->_size_ += _rangeS_;
 				}
 				else

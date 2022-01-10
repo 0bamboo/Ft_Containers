@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:54:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/09 17:47:23 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/10 14:34:05 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,7 +225,7 @@ namespace	ft
 	template <typename Iter>
 	typename _vectorIter<Iter>::difference_type	operator - (const _vectorIter<Iter>& _left, const _vectorIter<Iter>& _right)
 	{
-		return (_right.base() - _left.base());
+		return (_left.base() - _right.base());
 	}
 
 	// END! NON-MEMBER FUNCTIONS OVERLOADS
