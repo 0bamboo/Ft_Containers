@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:54:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/10 14:34:05 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/11 18:28:16 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,7 +290,7 @@ namespace	ft
 				{
 					_reverseIter	tmp(*this);
 					
-					--(*this);
+					--(this->_current_it);
 					return (tmp);
 				}
 				//}
@@ -301,7 +301,7 @@ namespace	ft
 				{
 					_reverseIter	tmp(*this);
 					
-					++(*this);
+					++(this->_current_it);
 					return (tmp);
 				}
 				// pre-decrement :

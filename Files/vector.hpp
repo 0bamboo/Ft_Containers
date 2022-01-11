@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:12:11 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/10 15:12:09 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/11 18:47:24 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,11 @@ namespace	ft
 			{
 				if (this != &obj)
 				{
-					this->clear();
-					this->_alloctype_.deallocate(this->_data_, this->_capacity_);
+					if (this->_size_)
+					{
+						this->clear();
+						this->_alloctype_.deallocate(this->_data_, this->_capacity_);
+					}
 					this->_size_ = obj.size();
 					this->_capacity_ = obj.capacity();
 					this->_alloctype_ = obj.get_allocator();
@@ -96,11 +99,11 @@ namespace	ft
 
 			// Iterators: { ---------
 			// Normal iterators: 
-			iterator		begin() { return (iterator(_data_)); }
-			const_iterator		begin() const { return (const_iterator(_data_)); }
+			iterator		begin() { return (iterator(this->_data_)); }
+			const_iterator		begin() const { return (const_iterator(this->_data_)); }
 
-			iterator		end() { return (iterator(_data_ + this->_size_)); }
-			const_iterator		end() const { return (const_iterator(_data_ + this->_size_)); }
+			iterator		end() { return (iterator(this->_data_ + this->_size_)); }
+			const_iterator		end() const { return (const_iterator(this->_data_ + this->_size_)); }
 			
 			// Reverse Iterators:
 			reverse_iterator	rbegin() { return (reverse_iterator(this->end())); }
@@ -161,14 +164,14 @@ namespace	ft
 			reference	at(size_type i)
 			{
 				if (i >= this->_size_)
-					throw (std::out_of_range("Vector"));
+					throw (std::out_of_range("vector"));
 				return (this->_data_[i]);
 			}
 
 			const_reference	at(size_type i) const
 			{
 				if (i >= this->_size_)
-					throw (std::out_of_range("Vector"));
+					throw (std::out_of_range("vector"));
 				return (this->_data_[i]);
 			}
 
@@ -280,10 +283,12 @@ namespace	ft
 				// if (idx < 0)
 				// 	throw std::out_of_range("vector");
 				size_type j = 0;
-				if (this->_size_ + _nElem > this->_capacity_)
+				if (this->_size_ + _nElem >= this->_capacity_)
 				{
+					// std::cout << "IN-1\n";
 					size_type _newCap_ = (this->_capacity_ * 2 >= this->_size_ + _nElem) ? this->_capacity_ * 2 : this->_size_ + _nElem;
 					pointer	  _newData_ = this->_alloctype_.allocate(_newCap_);
+					size_type _newSize_ = this->_size_ + _nElem;
 					size_type i = 0;
 					while (i < this->_size_)
 					{
@@ -295,13 +300,18 @@ namespace	ft
 						}
 						else
 							this->_alloctype_.construct(&_newData_[j++], this->_data_[i++]);
-						// if (_nElem == 0 && i )
+						// if (_nElem == 0)
 						// 	break ;
 					}
-					this->_size_ += _nElem;
+					if (this->_size_)
+						this->_alloctype_.deallocate(this->_data_, this->_capacity_);
+					this->_size_ = _newSize_;
+					this->_capacity_ = _newCap_;
+					this->_data_ = _newData_;
 				}
 				else
 				{
+					std::cout << "IN-2\n";
 					this->_size_ += _nElem;
 					j = this->_size_;
 					while (--j >= 0)
@@ -323,10 +333,8 @@ namespace	ft
 			iterator	insert(iterator _pos, const value_type& value)
 			{
 				difference_type	idx = _pos - this->begin();
-				// if (idx < 0)
-				// 	throw std::out_of_range("vector");
 				size_type j = 0;
-				if (this->_size_++ > this->_capacity_)
+				if (++this->_size_ >= this->_capacity_)
 				{
 					size_type	_newCap_ = (this->_capacity_ * 2 >= this->_size_) ? this->_capacity_ * 2 : this->_size_;
 					pointer		_newData_ = this->_alloctype_.allocate(_newCap_);
@@ -344,9 +352,10 @@ namespace	ft
 				}
 				else
 				{
-					j = this->_size_++;
-					while (j-- >= 0)
+					j = this->_size_;
+					while (--j >= 0)
 					{
+						// 1 2 | new element = 99 new_size = 3 and j = 3 - j = 2 | L1==> 1 2 2 | L2==> 1 1 2
 						if (j == (size_type)idx)
 						{
 							this->_alloctype_.construct(&this->_data_[j], value);
@@ -369,30 +378,29 @@ namespace	ft
 				if (_rangeS_ < 0)
 					throw std::out_of_range("vector");
 				size_type j = 0;
-				if (this->_size_ + _rangeS_ > this->_capacity_)
+				if (this->_size_ + _rangeS_ >= this->_capacity_)
 				{
+					std::cout << "here!\n";
 					size_type _newCap_ = (this->_capacity_ * 2 >= this->_size_ + _rangeS_) ? this->_capacity_ * 2 : this->_size_ + _rangeS_;
 					pointer	  _newData_ = this->_alloctype_.allocate(_newCap_);
 					size_type i = 0;
+					
 					while (i < this->_size_)
 					{
-						// 1 2 3 4 === 7 7 7 7 idx=1== > 1 7 7 7 7 3 4
-						// try to check that first != end rather decrementing rangeS
-						if (i == (size_type)idx && _rangeS_)
-						{
+						if (i == (size_type)idx && _first != _last)
 							this->_alloctype_.construct(&_newData_[j++], *_first++);
-							_rangeS_--;
-						}
 						else
 							this->_alloctype_.construct(&_newData_[j++], this->_data_[i++]);
-						// if (_rangeS_ == 0 && i )
-						// 	break ;
 					}
-					// this is wrong !!!!!!!!!!!!!!!!!!!!!!
+					if (this->_size_)
+						this->_alloctype_.deallocate(this->_data_, this->_capacity_);
+					this->_capacity_ = _newCap_;
 					this->_size_ += _rangeS_;
+					this->_data_ = _newData_;
 				}
 				else
 				{
+					std::cout << "here2!\n";
 					this->_size_ += _rangeS_;
 					j = this->_size_;
 					while (--j >= 0)
@@ -445,8 +453,8 @@ namespace	ft
 			{
 				difference_type idx = _first - this->begin();
 				size_type _deleteSize_ = _last - _first;
-				if (_deleteSize_)
-					throw std::out_of_range("vector");
+				// if (_deleteSize_)
+				// 	throw std::out_of_range("vector");
 				size_type i = 0, j = 0;
 				while (i < this->_size_)
 				{
@@ -479,27 +487,27 @@ namespace	ft
 	}
 	
 	template <typename _T, typename Alloc>
-	bool	operator > (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
-	{
-		return (ft::lexicographical_compare(_left.begin(), _left.end(), _right.begin(), _right.end()));
-	}
-	
-	template <typename _T, typename Alloc>
-	bool	operator >= (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
-	{
-		return (!(_left < _right));
-	}
-	
-	template <typename _T, typename Alloc>
 	bool	operator < (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
 	{
-		return (_right > _left);
+		return (ft::lexicographical_compare(_left.begin(), _left.end(), _right.begin(), _right.end()));
 	}
 	
 	template <typename _T, typename Alloc>
 	bool	operator <= (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
 	{
 		return (!(_right < _left));
+	}
+	
+	template <typename _T, typename Alloc>
+	bool	operator > (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
+	{
+		return (_right < _left);
+	}
+	
+	template <typename _T, typename Alloc>
+	bool	operator >= (const vector<_T, Alloc>& _left, const vector<_T, Alloc>& _right)
+	{
+		return (!(_left < _right));
 	}
 
 	// Function template of Swap :
