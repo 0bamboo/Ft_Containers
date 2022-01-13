@@ -55,33 +55,33 @@ struct Buffer
 
 // Stack tests
 
-// void stack_test() {
-//     MuntantStack<int, ns::vector<int> > s;
-//     MuntantStack<int, ns::vector<int> > s1;
-//     for (int i = 0; i < 10; i++)
-//         s.push(i);
-//     for (int i = 0; i < 11; i++)
-//         s1.push(i);
-//     MuntantStack<int, ns::vector<int> >::iterator it = s.begin();
-//     for (; it != s.end(); it++)
-//         std::cout << *it << std::endl;
-//     std::cout << "=========== empty ===========\n";
-//     std::cout << s.empty() << std::endl;
-//     std::cout << "=========== size ===========\n";
-//     std::cout << s.size() << std::endl;
-//     std::cout << "=========== pop ===========\n";
-//     while (!s.empty()) {
-//         std::cout << ' ' << s.top();
-//         s.pop();
-//     }
-//     std::cout << "\n";
-//     std::cout << (s == s1) << std::endl;
-//     std::cout << (s != s1) << std::endl;
-//     std::cout << (s < s1) << std::endl;
-//     std::cout << (s <= s1) << std::endl;
-//     std::cout << (s > s1) << std::endl;
-//     std::cout << (s >= s1) << std::endl;
-// }
+void stack_test() {
+    MuntantStack<int, ns::vector<int> > s;
+    MuntantStack<int, ns::vector<int> > s1;
+    for (int i = 0; i < 10; i++)
+        s.push(i);
+    for (int i = 0; i < 11; i++)
+        s1.push(i);
+    MuntantStack<int, ns::vector<int> >::iterator it = s.begin();
+    for (; it != s.end(); it++)
+        std::cout << *it << std::endl;
+    std::cout << "=========== empty ===========\n";
+    std::cout << s.empty() << std::endl;
+    std::cout << "=========== size ===========\n";
+    std::cout << s.size() << std::endl;
+    std::cout << "=========== pop ===========\n";
+    while (!s.empty()) {
+        std::cout << ' ' << s.top();
+        s.pop();
+    }
+    std::cout << "\n";
+    std::cout << (s == s1) << std::endl;
+    std::cout << (s != s1) << std::endl;
+    std::cout << (s < s1) << std::endl;
+    std::cout << (s <= s1) << std::endl;
+    std::cout << (s > s1) << std::endl;
+    std::cout << (s >= s1) << std::endl;
+}
 
 
 // Vector tests
@@ -681,14 +681,14 @@ void vector_reverse_iterator_test() {
 int main() {
     // Vector
     vector_iterator_test();
-    vector_capacity_test();
-    vector_modifiers_test();
-    vector_modifiers_second_test();
-    vector_random_test();
-    vector_access_test();
-    vector_test_operations();
-    vector_reverse_iterator_test();
-    vector_time_test();
+    // vector_capacity_test();
+    // vector_modifiers_test();
+    // vector_modifiers_second_test();
+    // vector_random_test();
+    // vector_access_test();
+    // vector_test_operations();
+    // vector_reverse_iterator_test();
+    // vector_time_test();
 
     // Stack
     // stack_test();

@@ -12,7 +12,7 @@ function run () {
 }
 
 function check_leak() {
-	clang++ -std=c++98 -Wall -Wextra -Werror test.cpp -D ns=ft -o ft
+	clang++ -std=c++98 -Wall -Wextra -Werror test_test.cpp -D ns=ft -o ft
 	valgrind --leak-check=full -s ./ft
 }
 
