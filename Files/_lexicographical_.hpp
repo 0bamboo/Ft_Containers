@@ -6,12 +6,12 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/02 00:57:04 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/02 15:19:08 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/19 16:26:18 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef _LEXICOGRAPHICAL_HPP
-# define _LEXICOGRAPHICAL_HPP
+#ifndef _LEXICOGRAPHICAL__HPP
+# define _LEXICOGRAPHICAL__HPP
 
 namespace ft
 {

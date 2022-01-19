@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 16:14:44 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/17 20:40:47 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/19 14:26:12 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int		_BigO_of_logn_(int arr[], int size, int search)
 
 // O(nlog(n)) (like merge sort and heap sort and quick sort).
 
-// O(n!) like NP-complete problems like (The Traveling Salesman Problem (look for it :D)) .
+// O(n!) like NP-complete problems like (The Traveling Salesman Problem (look for it :D (find the shortest route between the cities u want to visit))) .
 
 
 int main()

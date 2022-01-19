@@ -6,12 +6,12 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/02 00:56:07 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/02 02:12:49 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/19 16:26:30 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef _EQUAL_HPP
-#define _EQUAL_HPP
+#ifndef _EQUAL__HPP
+#define _EQUAL__HPP
 
 namespace ft
 {

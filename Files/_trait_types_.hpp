@@ -6,12 +6,12 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/01 18:37:30 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/09 17:45:55 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/19 16:26:04 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef _TRAIT_TYPES_HPP
-# define _TRAIT_TYPES_HPP
+#ifndef _TRAIT_TYPES__HPP
+# define _TRAIT_TYPES__HPP
 
 # include <iostream>
 
