@@ -4,6 +4,66 @@
 # include "_iter_.hpp"
 # include "vector.hpp"
 
+
+typedef struct t_node {
+    t_node *parent;
+    t_node *left;
+    t_node *right;
+    int     val;
+    int     height;
+    int     color;
+}node;
+
+std::allocator<node> alloc;
+node*    _left_rotation_(node *current)
+{
+    node    *tmp = alloc.allocate(1);
+
+    /* 2 
+            3
+                4
+    */
+   tmp = current->right;
+   current->right = tmp->left;
+   tmp->left = current;
+   return (tmp);
+}
+
+node*   _right_rotation_(node *current)
+{
+    node    *tmp = alloc.allocate(1);
+
+    /*          3
+            2 ===> tmp 
+        1
+    */
+
+    tmp = current->left;
+    current->left = tmp->right;
+    tmp->right = current;
+    return (tmp);
+}
+
+node*   _Left_Right_(node *current)
+{
+    /*      4
+        2
+            3   
+    */
+   current->left = _left_rotation_(current->left);
+   return (_right_rotation_(current));
+}
+
+node*   _Right_Left_(node*  current)
+{
+    /*  7
+            9
+        8
+    */
+   current->right = _right_rotation_(current->right);
+   return (_left_rotation_(current));
+}
+
 void vector_iterator_test() {
     std::string arr[] = {"1", "2", "3", "4", "5", "6"};
     ft::vector<std::string> v(arr, arr + static_cast<int>(sizeof(arr) / sizeof(std::string)));

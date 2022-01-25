@@ -6,7 +6,15 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:13:06 by abdait-m          #+#    #+#             */
-/*   Updated: 2021/12/26 16:13:07 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/01/26 00:10:28 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+# include <iostream>
+# include <map>
+# include <iterator>
+
+int main()
+{
+	std::map<int , int> test;
+}
