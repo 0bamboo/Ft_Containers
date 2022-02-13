@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/28 21:15:13 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/02/13 12:17:28 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,39 @@ namespace ft{
 
 
 	// RED BLACK TREE TEMPLATE CLASS :
-	
+	template<typename _pairValue, typename _Compare, typename _Alloc>
+	class	_rbTree_{
+		
+		public:
+			typedef		_pairValue														_valueType;
+			typedef 	tree_node<_pairValue>*											_nodePtr;
+			typedef typename _Alloc::template rebind<tree_node<_valueType>>::other		allocator_type;// this turn red black tree 
+			typedef typename	_Alloc::pointer											_allocPtr;
+			typedef typename	_Alloc::const_pointer									_allocConstPtr;
+			typedef typename	_Alloc::reference										_allocRef;
+			typedef typename	_Alloc::const_reference									_allocConstRef;
+			typedef		_Compare														_valueCompare;
+			typedef		tree_iterator<_nodePtr>											iterator;
+			typedef		ft::_reverseIter<iterator>										reverse_iterator;
+			typedef	size_t																size_type;
+			typedef std::ptrdiff_t														difference_type;
+
+		private:
+			_nodePtr		_root_;
+			allocator_type	_alloc;
+			_valueCompare	_comp;
+			size_type		_size;
+
+			// Function to create new nodes :
+			_nodePtr	_createNewNode(_valueType _pair)
+			{
+				_nodePtr	_new = _alloc.allocate(1);
+				
+				_alloc.construct(_new, _pair);
+				return (_new);
+			}
+			
+	};
 	
 };
 

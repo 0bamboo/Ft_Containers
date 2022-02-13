@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:23:00 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/27 23:36:42 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/02/13 12:02:31 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,23 @@ namespace ft{
 
 		public:
 			
-			typedef Key								key_type;
-			typedef T								mapped_type;
-			typedef Compare							key_compare;
-			typedef pair<key_type, mapped_type>		value_type;
+			typedef Key														key_type;
+			typedef T														mapped_type;
+			typedef Compare													key_compare;
+			typedef pair<const key_type, mapped_type>						value_type;
+			typedef	Alloc													allocator_type;
+			typedef _rbTree_<value_type, key_compare, allocator_type>		_rbTree_;
+			typedef typename allocator_type::pointer						pointer;
+			typedef typename allocator_type::reference						reference;
+			typedef typename allocator_type::const_reference				const_reference;
+			typedef typename allocator_type::const_pointer					const_pointer;
+			typedef typename _rbTree_::iterator								iterator;// add const iter and const rev
+			typedef typename _rbTree_::reverse_iterator						reverse_iterator;
+			typedef typename _rbTree_::size_type							size_type;
+			typedef typename _rbTree_::difference_type						difference_type;
 
 			// Class value_compare :
+
 			class value_compare{
 				
 				friend class map;
@@ -50,12 +61,11 @@ namespace ft{
 						return (_comp(_x._first, _y._first));
 					}
 			}; // END! class value_compare .
-
-			typedef	Alloc													allocator_type;
-			typedef typename allocator_type::pointer						pointer;
-			typedef typename allocator_type::reference						reference;
-			typedef typename allocator_type::const_reference				const_reference;
-			typedef typename allocator_type::const_pointer					const_pointer;
+		
+		private:
+			
+			
+			
 	};
 
 };
