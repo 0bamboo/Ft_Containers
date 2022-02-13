@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/02/13 12:17:28 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/02/13 16:36:52 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,10 @@ namespace ft{
 		public:
 			typedef		_pairValue														_valueType;
 			typedef 	tree_node<_pairValue>*											_nodePtr;
-			typedef typename _Alloc::template rebind<tree_node<_valueType>>::other		allocator_type;// this turn red black tree 
+			
+			// for holding another allocator for the tree_node type
+			typedef typename _Alloc::template rebind<tree_node<_valueType> >::other		allocator_type; 
+			
 			typedef typename	_Alloc::pointer											_allocPtr;
 			typedef typename	_Alloc::const_pointer									_allocConstPtr;
 			typedef typename	_Alloc::reference										_allocRef;
@@ -198,6 +201,26 @@ namespace ft{
 				
 				_alloc.construct(_new, _pair);
 				return (_new);
+			}
+
+			// Check if the node is  a left child:
+			bool	_isLeftChild_(_nodePtr _node)
+			{
+				return (_node == _node->_parent->_left);
+			}
+			
+			// Tree's node min and max :
+			_nodePtr	_treeMinimum(_nodePtr _node)
+			{
+				while (_node->_left != nullptr)
+					_node = _node->_left;
+				return (_node);
+			}
+			_nodePtr	_treeMaximum(_nodePtr _node)
+			{
+				while (_node->_right != nullptr)
+					_node = _node->_right;
+				return (_node);
 			}
 			
 	};
