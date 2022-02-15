@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/02/14 13:19:21 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/02/15 12:13:39 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -403,6 +403,32 @@ namespace ft{
 			const_reverse_iterator rend() const
 			{
 				return (const_reverse_iterator(this->begin()));
+			}
+			
+			// Tree size:
+			size_type	size()
+			{
+				return (this->_size);
+			}
+			
+			// Find operation for the tree :
+			_nodePtr	find(const _valueType& _pair)
+			{
+				_nodePtr	_curr = this->_root_;
+
+				while (_curr != nullptr)
+				{
+					if (!this->_comp(_pair, _curr->_pair) && !this->_comp(_curr->_pair, _pair))
+						break ;
+					_curr = this->_comp(_pair, _curr->pair) ? _curr->left : _curr->right;
+				}
+				return (_curr);
+			}
+
+			// Insertion method :
+			void	_insert_(const _valueType& _pair)
+			{
+				
 			}
 			
 			
