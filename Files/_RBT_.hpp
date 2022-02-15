@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/02/15 12:13:39 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/02/15 18:47:05 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ namespace ft{
 		bool			_color;
 
 		tree_node(): _color(_BLACK_), _parent(nullptr), _left(nullptr), _right(nullptr) { }
-		tree_node(value_type _dt): _color(_BLACK_), _pair(_dt), _parent(nullptr), _left(nullptr), _right(nullptr) { }
+		tree_node(value_type _dt): _color(_RED_), _pair(_dt), _parent(nullptr), _left(nullptr), _right(nullptr) { }
 	};
 
 	// Tree iterator :
@@ -325,7 +325,7 @@ namespace ft{
 			size_type		_size;
 
 			// Function to create new nodes :
-			_nodePtr	_createNewNode(_valueType _pair)
+			_nodePtr	_createNewNode_(_valueType _pair)
 			{
 				_nodePtr	_new = _alloc.allocate(1);
 				
@@ -340,13 +340,13 @@ namespace ft{
 			}
 			
 			// Tree's node min and max :
-			_nodePtr	_treeMinimum(_nodePtr _node)
+			_nodePtr	_treeMinimum_(_nodePtr _node)
 			{
 				while (_node->_left != nullptr)
 					_node = _node->_left;
 				return (_node);
 			}
-			_nodePtr	_treeMaximum(_nodePtr _node)
+			_nodePtr	_treeMaximum_(_nodePtr _node)
 			{
 				while (_node->_right != nullptr)
 					_node = _node->_right;
@@ -354,6 +354,18 @@ namespace ft{
 			}
 
 			// Rotation :
+			// Left rotation :
+			void	_leftRotate_(_nodePtr _nodeX) // _curr = grandparentnode 
+			{
+				_nodePtr _nodeY = _nodeX->_right;
+
+				_nodeX->_right = _nodeY->_left; // Turn nodeY's subtree into nodeX's subtree
+				if (_nodeY->_left != nullptr)
+					_nodeY->_left->_parent = _nodeX;
+				_nodeY->_parent = _nodeX->_parent;
+				if (_nodeX->_parent == nullptr) // 
+					this->_root_ = _nodeY;
+			}
 
 		public:
 
@@ -427,6 +439,38 @@ namespace ft{
 
 			// Insertion method :
 			void	_insert_(const _valueType& _pair)
+			{
+				_nodePtr _newNode = _createNewNode_(_pair);
+				_nodePtr _tmp;
+				_nodePtr _newNodeParent;
+
+				if (this->_root_ == nullptr)
+				{
+					this->_root_ = _newNode;
+					this->_root_->_color = _BLACK_;
+					// Create the end node and link it with the root
+				}
+				else
+				{
+					_tmp = this->_root_;
+					while (_tmp != nullptr)
+					{
+						_newNodeParent = _tmp;
+						_tmp = (this->_comp(_tmp->_pair, _pair) ? _tmp->_left : _tmp->_right);
+					}
+					_newNode->_parent = _newNodeParent; // link the parent for the new node 
+					if (this->_comp(_pair, _newNodeParent->_pair)) // find where to put the newnode for parent's POV
+						_newNodeParent->_left = _newNode;
+					else
+						_newNodeParent->_right = _newNode;
+					
+					// Fix the tree after insertion.... 
+					// _fixAfterInsertion_(_newNode);
+				}
+			}
+
+			// Balancing the tree after insertion :
+			void	_fixAfterInsertion_(_nodePtr _curr)
 			{
 				
 			}
