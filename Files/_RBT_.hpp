@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/02/15 18:47:05 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/02/17 17:12:52 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,6 +336,7 @@ namespace ft{
 			// Check if the node is  a left child:
 			bool	_isLeftChild_(_nodePtr _node)
 			{
+				// Check first if the parent exist !!
 				return (_node == _node->_parent->_left);
 			}
 			
@@ -355,16 +356,43 @@ namespace ft{
 
 			// Rotation :
 			// Left rotation :
-			void	_leftRotate_(_nodePtr _nodeX) // _curr = grandparentnode 
+			// node.isRightChild and node.parent.isRightChild
+			void	_leftRotate_(_nodePtr _nodeX) // _nodeX = grandparentnode 
 			{
 				_nodePtr _nodeY = _nodeX->_right;
 
 				_nodeX->_right = _nodeY->_left; // Turn nodeY's subtree into nodeX's subtree
-				if (_nodeY->_left != nullptr)
-					_nodeY->_left->_parent = _nodeX;
+				if (_nodeX->_right != nullptr)
+					_nodeX->_right->_parent = _nodeX;
 				_nodeY->_parent = _nodeX->_parent;
-				if (_nodeX->_parent == nullptr) // 
-					this->_root_ = _nodeY;
+				if (_nodeX->_parent == nullptr)
+					this->_root_ = _nodeY; // add the end node -> to the new root
+				else if (_isLeftChild_(_nodeX))
+					_nodeX->_parent->_left = _nodeY;
+				else
+					_nodeX->_parent->_right = _nodeY;
+				_nodeY->_left = _nodeX;
+				_nodeX->_parent = _nodeY;
+			}
+
+			// Right rotation :
+			// node.isLeftChild and node.parent.isLeftChild
+			void	_rightRotate_(_nodePtr _nodeX) // _nodeX = grandparentnode
+			{
+				_nodePtr _nodeY = _nodeX->_left;
+
+				_nodeX->_left = _nodeY->_right;
+				if (_nodeX->_left != nullptr)
+					_nodeX->_left->_parent = _nodeX;
+				_nodeY->_parent = _nodeX->_parent;
+				if (_nodeX->_parent == nullptr)
+					this->_root = _nodeY;
+				else if (_isLeftChild_(_nodeX))
+					_nodeX->_parent->_left = _nodeY;
+				else
+					_nodeX->_parent->_right = _nodeY;
+				_nodeY->_right = _nodeX;
+				_nodeX->_parent = _nodeY;
 			}
 
 		public:
@@ -472,6 +500,30 @@ namespace ft{
 			// Balancing the tree after insertion :
 			void	_fixAfterInsertion_(_nodePtr _curr)
 			{
+
+				// Fixing for (red node cannot have red children):
+				
+				// Case 1 : Parent(isLeftChild) , ParentSibling(isRed) , newNodeLocation(does not matter) {
+					// Change the color of the parent and the sibling to black ,
+					// change the color of the grandparent to red ,
+					// move the current location to the grandparent (points to the grandparent(theNewFixingNode) to continue fixing ...)
+				// }
+				
+				// Case 2 : Parent(isLeftChild) , ParentSibling(isBlack) , newNodeLocation(isRightChild) {
+					// In this case we Perform the leftRotation on the parent (after rotation oldParent = thisParent), 
+					// then we set the newFixingNode to oldParent 
+					// This operation transfer Case 2 to Case 3 ...
+				// }
+				
+				// Case 3 : Parent(isLeftChild) , ParentSibling(isBlack) , newNodeLocation(isLeftChild) {
+					// Change the color of the parent to black ,
+					// Change the color of the grandparent to red ,
+					// Perform the rightRotation on the grandparent
+				// }
+				
+				// Case 4 : Parent(isRightChild) , ParentSibling(isRed) , newNodeLocation(does not matter)
+				// Case 5 : Parent(isRightChild) , ParentSibling(isBlack) , newNodeLocation(isLeftChild)
+				// Case 6 : Parent(isRightChild) , ParentSibling(isBlack) , newNodeLocation(isRightChild)
 				
 			}
 			
