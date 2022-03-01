@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/02/17 17:12:52 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/01 06:21:40 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -398,6 +398,33 @@ namespace ft{
 		public:
 
 			// Constructors:
+			_rbTree_(_valueCompare compare, allocator_type allocator): _root_(nullptr), _alloc(allocator), _comp(compare), _size(0)
+			{
+				this->_endNode_ = this->_createNewNode_();
+			}
+
+			_rbTree_(const _rbTree_& tree)
+			{
+				*this = tree;
+			}
+
+			_rbTree_&	operator = (const _rbTree_&	tree)
+			{
+				if (this != &tree)
+				{
+					this->clear();
+					this->_comp = tree.value_comp();
+					this->_alloc = tree._alloc;
+					iterator iter = tree.begin();
+					while (iter != iter.end())
+						this->insert(*iter++);
+				}
+			}
+
+			~_rbTree_()
+			{
+				
+			}
 			
 
 			// Iterators:
@@ -450,6 +477,18 @@ namespace ft{
 			{
 				return (this->_size);
 			}
+
+			// Return compare :
+			_valueCompare value_comp() const
+			{
+				return this->_comp;
+			}
+
+			// Clear :
+			void	clear()
+			{
+				// delete everything ....
+			}
 			
 			// Find operation for the tree :
 			_nodePtr	find(const _valueType& _pair)
@@ -476,10 +515,15 @@ namespace ft{
 				{
 					this->_root_ = _newNode;
 					this->_root_->_color = _BLACK_;
-					// Create the end node and link it with the root
+					this->_size++;
+					this->_parent = this->_endNode_;
+					this->_endNode_->_left = this->_root_;
 				}
 				else
 				{
+					// in case of duplicates,
+					if (this->find(_pair) != nullptr)
+						return ;
 					_tmp = this->_root_;
 					while (_tmp != nullptr)
 					{
@@ -491,43 +535,98 @@ namespace ft{
 						_newNodeParent->_left = _newNode;
 					else
 						_newNodeParent->_right = _newNode;
-					
-					// Fix the tree after insertion.... 
-					// _fixAfterInsertion_(_newNode);
+					this->_size++;
+					this->_fixAfterInsertion_(_newNode);
+					this->_endNode_->_left = this->_root_;
+					this->_root_->_parent = this->_endNode_;
 				}
 			}
 
 			// Balancing the tree after insertion :
-			void	_fixAfterInsertion_(_nodePtr _curr)
+			void	_fixAfterInsertion_(_nodePtr _fixingNode)
 			{
-
 				// Fixing for (red node cannot have red children):
-				
-				// Case 1 : Parent(isLeftChild) , ParentSibling(isRed) , newNodeLocation(does not matter) {
-					// Change the color of the parent and the sibling to black ,
-					// change the color of the grandparent to red ,
-					// move the current location to the grandparent (points to the grandparent(theNewFixingNode) to continue fixing ...)
-				// }
-				
-				// Case 2 : Parent(isLeftChild) , ParentSibling(isBlack) , newNodeLocation(isRightChild) {
-					// In this case we Perform the leftRotation on the parent (after rotation oldParent = thisParent), 
-					// then we set the newFixingNode to oldParent 
-					// This operation transfer Case 2 to Case 3 ...
-				// }
-				
-				// Case 3 : Parent(isLeftChild) , ParentSibling(isBlack) , newNodeLocation(isLeftChild) {
-					// Change the color of the parent to black ,
-					// Change the color of the grandparent to red ,
-					// Perform the rightRotation on the grandparent
-				// }
-				
-				// Case 4 : Parent(isRightChild) , ParentSibling(isRed) , newNodeLocation(does not matter)
-				// Case 5 : Parent(isRightChild) , ParentSibling(isBlack) , newNodeLocation(isLeftChild)
-				// Case 6 : Parent(isRightChild) , ParentSibling(isBlack) , newNodeLocation(isRightChild)
-				
+				while (_fixingNode->_parent && _fixingNode->_color == _RED_)
+				{
+					if (_isLeftChild_(_fixingNode->_parent))
+					{
+						_nodePtr	_parentSibling = _fixingNode->_parent->_parent->_right;
+						
+						if (_parentSibling && _parentSibling->_color == _RED_)
+						{
+							// Case 1 : Parent(isLeftChild) , ParentSibling(isRed) , newNodeLocation(does not matter) {
+								// Change the color of the parent and the parent's sibling to black ,
+								// change the color of the grandparent to red ,
+								// move the current location to the grandparent (points to the grandparent(theNewFixingNode) to continue fixing ...)
+							// }
+							_parentSibling->_color = _BLACK_;
+							_fixingNode->_parent->_color = _BLACK_;
+							_fixingNode->_parent->_parent = _RED_;
+							_fixingNode = _fixingNode->_parent->_parent;
+						}
+						else
+						{
+							if (!_isLeftChild_(_fixingNode))
+							{
+								// Case 2 : Parent(isLeftChild) , ParentSibling(isBlack) , newNodeLocation(isRightChild) {
+									// In this case we Perform the leftRotation on the parent (after rotation oldParent = thisParent), 
+									// then we set the newFixingNode to oldParent 
+									// This operation transfer Case 2 to Case 3 ...
+								// }
+								_fixingNode = _fixingNode->_parent;
+								this->_leftRotate_(_fixingNode);
+							}
+							// Case 3 : Parent(isLeftChild) , ParentSibling(isBlack) , newNodeLocation(isLeftChild) {
+								// Change the color of the parent to black ,
+								// Change the color of the grandparent to red ,
+								// Perform the rightRotation on the grandparent
+							// }
+							_fixingNode->_parent->_color = _BLACK_;
+							_fixingNode->_parent->_parent = _RED_;
+							this->_rightRotate_(_fixingNode->_parent->_parent);
+							break ;
+						}
+					}
+					else
+					{
+						_nodePtr	_parentSibling = _fixingNode->_parent->_parent->_left;
+
+						if (_parentSibling && _parentSibling->_color == _RED_)
+						{
+							// Case 4 : Parent(isRightChild) , ParentSibling(isRed) , newNodeLocation(does not matter)
+								// change the color of the parent and the parent's siblings to black
+								// change the color of the grandparent to red .
+								// move the current location to the grandparent ... continue fixing...
+							_fixingNode->_parent = _BLACK_;
+							_parentSibling = _BLACK_;
+							_fixingNode->_parent->_parent->_color = _RED_;
+							_fixingNode = _fixingNode->_parent->_parent;
+						}
+						else
+						{
+							if (_isLeftChild_(_fixingNode))
+							{
+								// Case 5 : Parent(isRightChild) , ParentSibling(isBlack) , newNodeLocation(isLeftChild)
+									// Perform the rightRotation on the parent (after rotation the new parent is fixingnode)
+									// the fixingnode becomes the parent
+									// this operation transfer case 5 to case 6.
+								_fixingNode = _fixingNode->_parent;
+								this->_rightRotate_(_fixingNode);
+							}
+							// Case 6 : Parent(isRightChild) , ParentSibling(isBlack) , newNodeLocation(isRightChild)
+								// Change the color of the fixingnode's parent to black .
+								// change the color of fixingnode's grandparent to red .
+								// preform the leftRotation...
+							_fixingNode->_parent->_color = _BLACK_;
+							_fixingNode->_parent->_parent->_color = _RED_;
+							this->_leftRotate_(_fixingNode->_parent->_parent);
+							break ;
+						}
+					}
+				}
+				this->_root_->_color = _BLACK_;
 			}
-			
-			
+		
 	};
 	
 };
