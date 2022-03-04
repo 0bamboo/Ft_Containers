@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/04 04:52:48 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/04 16:39:16 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ namespace ft{
 			iterator_type	base() const { return (this->_curr); }
 
 			reference	operator *( ) const { return (this->_curr->_pair); }
+
+			_node	_get_node_() const { return (this->_curr); }
 
 			pointer		operator ->() const { return (&(operator *())); }
 
@@ -153,7 +155,7 @@ namespace ft{
 					}
 					else
 					{
-						iterator_type	_tmp = _currNode->_parent;
+						_node	_tmp = _currNode->_parent;
 						while (_tmp != nullptr && _currNode == _tmp->_right)
 						{
 							_currNode = _tmp;
@@ -203,6 +205,8 @@ namespace ft{
 			iterator_type	base() const { return (this->_curr); }
 
 			reference	operator *( ) const { return (this->_curr->_pair); }
+
+			_node	_get_node_() const { return (this->_curr); }
 
 			pointer		operator ->() const { return (&(operator *())); }
 
@@ -280,7 +284,7 @@ namespace ft{
 					}
 					else
 					{
-						iterator_type	_tmp = _currNode->_parent;
+						_node	_tmp = _currNode->_parent;
 						while (_tmp != nullptr && _currNode == _tmp->_right)
 						{
 							_currNode = _tmp;
@@ -396,6 +400,45 @@ namespace ft{
 				_nodeX->_parent = _nodeY;
 			}
 
+			_nodePtr	prev(_nodePtr _currNode)
+			{
+				if (_currNode->_left != nullptr)
+				{
+					while (_currNode->_right != nullptr)
+						_currNode = _currNode->_right;
+					return (_currNode);
+				}
+				else
+				{
+					_nodePtr _tmp = _currNode->_parent;
+					while (_tmp != nullptr && _currNode == _tmp->_left)
+					{
+						_currNode = _tmp;
+						_tmp = _tmp->_parent;
+					}
+					return (_tmp);
+				}
+			}
+
+			_nodePtr	next(_nodePtr _currNode)
+			{
+				if (_currNode->_right != nullptr)
+				{
+					while (_currNode->_left != nullptr)
+						_currNode = _currNode->_left;
+					return (_currNode);
+				}
+				else
+				{
+					_nodePtr	_tmp = _currNode->_parent;
+					while (_tmp != nullptr && _currNode == _tmp->_right)
+					{
+						_currNode = _tmp;
+						_tmp = _tmp->_parent;
+					}
+					return (_tmp);
+				}
+			}
 			void	_free_(_nodePtr _currNode_)
 			{
 				if (_currNode_ != nullptr)
@@ -713,7 +756,7 @@ namespace ft{
 						{
 							if (_isLeftChild_(_fixingNode))
 							{
-								// Case 5 : Parent(isRightChild) , ParentSibling(isBlack) , newNodeLocation(isLeftChild)
+								// Case 5 : Pa	rent(isRightChild) , ParentSibling(isBlack) , newNodeLocation(isLeftChild)
 									// Perform the rightRotation on the parent (after rotation the new parent is fixingnode)
 									// the fixingnode becomes the parent
 									// this operation transfer case 5 to case 6.
@@ -734,12 +777,26 @@ namespace ft{
 				this->_root_->_color = _BLACK_;
 			}
 
+
+			// Transplant : if deleting node has no or only one child we use this method.
+			void	_transplant_(_nodePtr	_deletingNode_, _nodePtr	_replacingNode_)
+			{
+				if (_deletingNode_->_parent == nullptr)
+					this->_root = _replacingNode_;
+				else if (this->_isLeftChild_(_deletingNode_))
+					_deletingNode_->_parent->left = _replacingNode_;
+				else
+					_deletingNode_->_parent->_right = _replacingNode_;
+				if (_replacingNode_ != nullptr)
+					_replacingNode_->_parent = _deletingNode_->_parent;
+			}
+		
 			// Delete :
 			void	_delete_(_nodePtr	_deletingNode_)
 			{
 				(void)_deletingNode_;
 			}
-		
+			
 	};
 	
 };

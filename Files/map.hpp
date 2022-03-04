@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:23:00 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/04 09:05:14 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/04 16:30:12 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ namespace ft{
 			void	erase(iterator pos)
 			{
 				if (this->find((*pos)._first) != this->end())
-					this->_tree_._delete_(*pos);
+					this->_tree_._delete_(pos._get_node_());
 			}
 
 			size_type	erase(const key_type& key)
