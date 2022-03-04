@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/01 06:21:40 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/04 04:52:48 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,12 +295,13 @@ namespace ft{
 
 
 	// RED BLACK TREE TEMPLATE CLASS :
-	template<typename _pairValue, typename _Compare, typename _Alloc>
+	template<typename Key, typename _pairValue, typename _Compare, typename _Alloc>
 	class	_rbTree_{
 		
 		public:
 			typedef		_pairValue														_valueType;
 			typedef 	tree_node<_pairValue>*											_nodePtr;
+			typedef		Key																key_type;
 			
 			// for holding another allocator for the tree_node type
 			typedef typename _Alloc::template rebind<tree_node<_valueType> >::other		allocator_type; 
@@ -395,6 +396,17 @@ namespace ft{
 				_nodeX->_parent = _nodeY;
 			}
 
+			void	_free_(_nodePtr _currNode_)
+			{
+				if (_currNode_ != nullptr)
+				{
+					this->_free_(_currNode_->_left);
+					this->_free_(_currNode_->_right);
+					this->_alloc.destroy(_currNode_);
+					this->_alloc.deallocate(_currNode_);
+				}
+			}
+
 		public:
 
 			// Constructors:
@@ -423,7 +435,9 @@ namespace ft{
 
 			~_rbTree_()
 			{
-				
+				this->clear();
+				this->_alloc.destroy(this->_endNode_);
+				this->_alloc.deallocate(this->_endNode_);
 			}
 			
 
@@ -477,6 +491,11 @@ namespace ft{
 			{
 				return (this->_size);
 			}
+			// Max size :
+			size_type	max_size()
+			{
+				return (this->_alloc.max_size());
+			}
 
 			// Return compare :
 			_valueCompare value_comp() const
@@ -484,11 +503,99 @@ namespace ft{
 				return this->_comp;
 			}
 
+			// Upper Bound : returns first node whose key is greater than searching key.
+			iterator	upper_bound(const key_type& key)
+			{
+				_nodePtr	_tmp_ = this->_root_;
+				_nodePtr	_res_ = this->_endNode_;
+
+				while(_tmp_ != nullptr)
+				{
+					if (this->_comp(key, _tmp_->_pair))
+					{
+						_res_ = _tmp_;
+						_tmp_ = _tmp_->_left;
+					}
+					else
+						_tmp_ = _tmp_->_right;
+				}
+				return iterator(_tmp_);				
+			}
+			
+			const_iterator	upper_bound(const key_type& key) const
+			{
+				_nodePtr	_tmp_ = this->_root_;
+				_nodePtr	_res_ = this->_endNode_;
+
+				while(_tmp_ != nullptr)
+				{
+					if (this->_comp(key, _tmp_->_pair))
+					{
+						_res_ = _tmp_;
+						_tmp_ = _tmp_->_left;
+					}
+					else
+						_tmp_ = _tmp_->_right;
+				}
+				return const_iterator(_tmp_);
+			}
+
+			// Lower bound : similar with upper_bound but for the case of key = searching key lower_b returns key 
+			// whereas upper return the next key (node)
+			iterator	lower_bound(const key_type& key)
+			{
+				_nodePtr	_tmp_ = this->_root_;
+				_nodePtr	_res_ = this->_endNode_;
+
+				while(_tmp_ != nullptr)
+				{
+					if (!this->_comp(_tmp_->_pair, key))
+					{
+						_res_ = _tmp_;
+						_tmp_ = _tmp_->_left;
+					}
+					else
+						_tmp_ = _tmp_->_right;
+				}
+				return (iterator(_tmp_));
+			}
+
+			const_iterator	lower_bound(const key_type& key) const
+			{
+				_nodePtr	_tmp_ = this->_root_;
+				_nodePtr	_res_ = this->_endNode_;
+				
+				while(_tmp_ != nullptr)
+				{
+					if (!this->_comp(_tmp_->_pair, key))
+					{
+						_res_ = _tmp_;
+						_tmp_ = _tmp_->_left;
+					}
+					else
+						_tmp_ = _tmp_->_right;
+				}
+				return (const_iterator(_tmp_));
+			}
+
+			// Swap :
+			void	swap(_rbTree_& tree)
+			{
+				std::swap(this->_endNode_, tree._endNode_);
+				std::swap(this->_root_, tree._root_);
+				std::swap(this->_alloc, tree._alloc);
+				std::swap(this->_comp, tree._comp);
+				std::swap(this->_size, tree._size);
+			}
+
 			// Clear :
 			void	clear()
 			{
 				// delete everything ....
-			}
+				this->_free_(this->_root_);
+				this->_root_ = nullptr;
+				this->_size = 0;
+			}			
 			
 			// Find operation for the tree :
 			_nodePtr	find(const _valueType& _pair)
@@ -625,6 +732,12 @@ namespace ft{
 					}
 				}
 				this->_root_->_color = _BLACK_;
+			}
+
+			// Delete :
+			void	_delete_(_nodePtr	_deletingNode_)
+			{
+				(void)_deletingNode_;
 			}
 		
 	};

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:23:00 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/02/15 12:00:01 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/04 09:05:14 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ namespace ft{
 			typedef Compare													key_compare;
 			typedef pair<const key_type, mapped_type>						value_type;
 			typedef	Alloc													allocator_type;
-			typedef _rbTree_<value_type, key_compare, allocator_type>		_rbTree_;
+			typedef _rbTree_<key_type, value_type, key_compare, allocator_type>		_rbTree_;
 			typedef typename ft::tree_node<value_type>*						_nodePtr_;
 			typedef typename allocator_type::pointer						pointer;
 			typedef typename allocator_type::reference						reference;
@@ -92,10 +92,15 @@ namespace ft{
 				if (this != &obj)
 				{
 					// Clear this tree then insert all the nodes in obj
+					this->clear();
+					this->_alloc = obj._alloc;
+					this->_compare = obj._compare;
 					this->insert(obj.begin(), obj.end());
 				}
 				return (*this);
 			}
+
+			~map() { }
 
 			// Iterators:
 			iterator	begin()
@@ -159,35 +164,61 @@ namespace ft{
 			// Insert methods:
 			pair<iterator, bool>	insert(const value_type& _pair)
 			{
-				
+				iterator	_found = this->find(_pair._first);
+
+				if (_found == this->end())
+				{
+					this->_tree_._insert_(_pair);
+					_found = this->find(_pair._first);
+					return (pair<iterator, bool>(_found, true));
+				}
+				return (pair<iterator, bool>(_found, false));
 			}
 
 			iterator	insert(iterator pos, const value_type& _pair)
 			{
-
+				pos = this->find(_pair._first);
+				if(pos != this->end())
+					return (pos);
+				this->insert(_pair);
+				return (this->find(_pair._first));
 			}
 
 			template<typename _iter>
 			void	insert(_iter first, _iter last)
 			{
-				
+				for(; first!=last; first++)
+					this->insert(*first);
+			}
+
+			// Clear : delete everything.
+			void	clear()
+			{
+				this->_tree_.clear();
 			}
 
 			// Erase methods:
 			void	erase(iterator pos)
 			{
-				// look for the pos and erase it using the method of delete of the tree
+				if (this->find((*pos)._first) != this->end())
+					this->_tree_._delete_(*pos);
 			}
 
 			size_type	erase(const key_type& key)
 			{
-				
+				iterator _found = this->find(key);
+				if (_found != this->end())
+				{
+					this->erase(_found);
+					return (1);
+				}
+				return (0);
 			}
 
 			void	erase(iterator first, iterator last)
 			{
-				while (first != last)
-					this->erase(first++);
+				for(;first!=last;first++)
+					this->erase(first);
 			}
 
 			// Find methods :
@@ -208,10 +239,83 @@ namespace ft{
 					return (const_iteraotr(tmp));
 				return (this->end());
 			}
-			
-			
-	};
 
-};
+			// Count return 1 if the key exists 0 otherwise:
+			size_type	count(const key_type& k) const
+			{
+				return(this->find(k) != this->end());
+			}
+
+			// Return key comparison object :
+			key_compare	key_comp() const
+			{
+				return (this->_compare);
+			}
+
+			// Return the value comparison object .
+			value_compare	value_comp() const
+			{
+				return (value_compare(this->_compare));
+			}
+
+			// Swap :
+			void	swap(map& _map_)
+			{
+				this->_tree_.swap(_map_._tree_);
+				std::swap(this->_alloc, _map_._alloc);
+				std::swap(this->_compare, _map_._compare);
+			}
+
+			// Upper bound:
+			iterator	upper_bound(const key_type& k)
+			{
+				return (this->_tree_.upper_bound(make_pair(k, mapped_type())));
+			}
+
+			const_iterator	upper_bound(const key_type& k) const
+			{
+				return (this->_tree_.upper_bound(make_pair(k, mapped_type())));
+			}
+
+			// Lower bound :
+			iterator	lower_bound(const key_type& k)
+			{
+				return (this->_tree_.lower_bound(make_pair(k, mapped_type())));
+			}
+
+			const_iterator lower_bound(const key_type& k) const
+			{
+				return (this->_tree_.lower_bound(make_pair(k, mapped_type())));
+			}
+
+			// return allocator type:
+			allocator_type	get_allocator() const
+			{
+				return (this->_alloc);
+			}
+			
+			// Equal range : get range of equal elements but since all the key are unique so the size of the range is 1 if the key exists
+			pair<iterator, iterator> equal_range(const key_type& k)
+			{
+				return (pair<iterator, iterator>(this->lower_bound(k), this->upper_bound(k)));
+			}
+			
+			pair<const_iterator, const_iterator> equal_range(const key_type& k) const
+			{
+				return (pair<const_iterator, const_iterator>(this->lower_bound(k), this->upper_bound(k)));
+			}
+
+			// Access element :
+			mapped_type&	operator[](const key_type& _key)
+			{
+				iterator	_found = this->find(_key);
+				if (_found != this->end())
+					return ((*_found)._second);
+				return (*((this->insert(make_pair(_key,mapped_type())))._first))._second;
+			}
+			
+	};// END MAP!
+
+}; // END NAMESPACE FT!
 
 #endif
