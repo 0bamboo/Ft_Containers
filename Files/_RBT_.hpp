@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/04 16:39:16 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/07 12:52:45 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #define _RBT__HPP
 
 # include "_iter_.hpp"
+# include <iostream>
 
 # define _BLACK_ 1
 # define _RED_   0
@@ -50,7 +51,7 @@ namespace ft{
 			typedef std::bidirectional_iterator_tag					iterator_category;
 			typedef std::ptrdiff_t									difference_type;
 			typedef tree_iterator<_pairType>						_self;
-			typedef	typename tree_node<_pairType>::_nodePtr			_node;
+			typedef	typename tree_node<_pairType>::_nodePtr			_node;// this the iterator type 
 		
 		private:
 			_node	_curr;
@@ -73,7 +74,7 @@ namespace ft{
 			
 			~tree_iterator() { }
 
-			iterator_type	base() const { return (this->_curr); }
+			iterator_type	base() const { return (tree_iterator(this->_curr)); }
 
 			reference	operator *( ) const { return (this->_curr->_pair); }
 
@@ -446,7 +447,7 @@ namespace ft{
 					this->_free_(_currNode_->_left);
 					this->_free_(_currNode_->_right);
 					this->_alloc.destroy(_currNode_);
-					this->_alloc.deallocate(_currNode_);
+					this->_alloc.deallocate(_currNode_, 1);
 				}
 			}
 
@@ -455,7 +456,7 @@ namespace ft{
 			// Constructors:
 			_rbTree_(_valueCompare compare, allocator_type allocator): _root_(nullptr), _alloc(allocator), _comp(compare), _size(0)
 			{
-				this->_endNode_ = this->_createNewNode_();
+				// this->_endNode_ = this->_createNewNode_(bb);
 			}
 
 			_rbTree_(const _rbTree_& tree)
@@ -480,53 +481,21 @@ namespace ft{
 			{
 				this->clear();
 				this->_alloc.destroy(this->_endNode_);
-				this->_alloc.deallocate(this->_endNode_);
+				this->_alloc.deallocate(this->_endNode_, 1);
 			}
 			
 
 			// Iterators:
-			iterator	begin()
+			_nodePtr	begin()
 			{
 				if (this->_root_ != nullptr)
 					return (iterator(_treeMinimum(this->_root_)));
 				return (this->_endNode_);
 			}
 
-			const_iterator	begin() const
-			{
-				if (this->_root_ != nullptr)
-					return (const_iterator(_treeMinimum(this->_root_)));
-				return (this->_endNode_);
-			}
-
-			iterator	end()
+			_nodePtr	end()
 			{
 				return (iterator(this->_endNode_));
-			}
-
-			const_iterator	end() const
-			{
-				return (const_iterator(this->_endNode_));
-			}
-
-			reverse_iterator	rbegin()
-			{
-				return (reverse_iterator(this->end()));
-			}
-
-			const_reverse_iterator	rbegin() const
-			{
-				return (const_reverse_iterator(this->end()));
-			}
-
-			reverse_iterator	rend()
-			{
-				return (reverse_iterator(this->begin()));
-			}
-
-			const_reverse_iterator rend() const
-			{
-				return (const_reverse_iterator(this->begin()));
 			}
 			
 			// Tree size:
@@ -796,6 +765,135 @@ namespace ft{
 			{
 				(void)_deletingNode_;
 			}
+
+			/*
+				void delete(value_type _data = value_type())
+				{
+					node_pointer _del_node;
+					node_pointer _node_x;
+					if (!this->_root || (_del_node = this->find(_data)) == nullptr)
+						return ;
+					this->_end->_left = nullptr;
+					this->_root->_parent = nullptr;
+					node_pointer _node_y = _del_node;
+					bool _deleted_col = _node_y->_color;
+					if (_del_node->_left == nullptr)
+					{
+						_node_x = _del_node->_right;
+						this->shift(_del_node, _del_node->_right);
+						_alloc.destroy(_del_node);
+						_alloc.deallocate(_del_node, 1);
+					}
+					else if (_del_node->_right == nullptr)
+					{
+
+						_node_x = _del_node->_left;
+						this->shift(_del_node, _del_node->_left);
+						_alloc.destroy(_del_node);
+						_alloc.deallocate(_del_node, 1);
+					}
+					else
+					{
+						_node_y = minimum(_del_node->_right);
+						_deleted_col = _node_y->_color;
+						_node_x = _node_y->_right;
+						if (_node_y->_parent != nullptr && _node_y->_parent != _del_node)
+						{
+							this->shift(_node_y, _node_y->_right);
+							_node_y->_right = _del_node->_right;
+							_node_y->_right->_parent = _node_y;
+						}
+						this->shift(_del_node, _node_y);
+						_node_y->_left = _del_node->_left;
+						_node_y->_left->_parent = _node_y;
+						_node_y->_color = _del_node->_color;
+						_alloc.destroy(_del_node);
+						_alloc.deallocate(_del_node, 1);
+					}
+					if (_deleted_col == BLACK && _node_x != nullptr)
+						this->treeFixAfterRemove(_node_x);
+					if (this->_root != nullptr)
+					{
+						this->_end->_left = this->_root;
+						this->_root->_parent = this->_end;
+					}
+					this->_size--;
+				}
+
+				void fixdelete(node_pointer _node_x)
+				{
+					while (_node_x != this->_root && _node_x->_color == BLACK)
+					{
+						if (_node_x != nullptr && _node_x == _node_x->_parent->_left)
+						{
+							node_pointer _sibling = _node_x->_parent->_right;
+							if (_sibling != nullptr && _sibling->_color == RED)
+							{
+								_sibling->_color = BLACK;
+								_node_x->_parent->_color = RED;
+								this->leftRotate(_node_x->_parent);
+								_sibling = _node_x->_parent->_right;
+							}
+							if (_sibling != nullptr && _sibling->_color == BLACK
+								&& _sibling->_left->_color == BLACK
+								&& _sibling->_right->_color == BLACK)
+							{
+								_sibling->_color = RED;
+								_node_x = _node_x->_parent;
+							}
+							else
+							{
+								if (_sibling->_right->_color == BLACK)
+								{
+									_sibling->_left->_color = BLACK;
+									_sibling->_color = RED;
+									this->rightRotate(_sibling);
+								}
+								_sibling->_color = _node_x->_parent->_color;
+								_node_x->_parent->_color = BLACK;
+								_sibling->_right->_color = BLACK;
+								this->leftRotate(_node_x->_parent);
+								_node_x = this->_root;
+							}
+						}
+						else
+						{
+							node_pointer _sibling = _node_x->_parent->_left;
+							if (_sibling != nullptr && _sibling->_color == RED)
+							{
+								_sibling->_color = BLACK;
+								_node_x->_parent->_color = RED;
+								this->rightRotate(_node_x->_parent);
+								_sibling = _node_x->_parent->_left;
+							}
+							if (_sibling != nullptr && _sibling->_color == BLACK
+								&& _sibling->_right->_color == BLACK
+								&& _sibling->_left->_color == BLACK)
+							{
+								_sibling->_color = RED;
+								_node_x = _node_x->_parent;
+							}
+							else
+							{
+								if (_sibling->_left->_color == BLACK)
+								{
+									_sibling->_right->_color = BLACK;
+									_sibling->_color = RED;
+									this->leftRotate(_sibling);
+								}
+								_sibling->_color = _node_x->_parent->_color;
+								_node_x->_parent->_color = BLACK;
+								_sibling->_left->_color = BLACK;
+								this->rightRotate(_node_x->_parent);
+								_node_x = this->_root;
+							}
+						}
+					}
+					_node_x->_color = BLACK;
+				}
+			};
+
+			*/
 			
 	};
 	
