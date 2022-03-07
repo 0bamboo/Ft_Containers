@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 23:24:08 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/06 00:46:22 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/07 21:37:18 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ namespace ft{
 
 			iterator_type	base() const { return (this->_curr); }
 
-			reference	operator *( ) const { return (this->_curr->_pair._first); }
+			reference	operator *( ) const { return (this->_curr->_pair.first); }
 
 			_node	_get_node_() const { return (this->_curr); }
 
@@ -160,7 +160,7 @@ namespace ft{
 			
 			typedef T														key_type;
 			typedef Compare													key_compare;
-			typedef pair<const key_type, key_type>							value_type;
+			typedef T														value_type;
 			typedef	Alloc													allocator_type;
 			typedef _rbTree_<key_type, value_type, key_compare, allocator_type>		_rbTree_;
 			typedef typename ft::tree_node<value_type>*						_nodePtr_;
@@ -168,8 +168,8 @@ namespace ft{
 			typedef typename allocator_type::reference						reference;
 			typedef typename allocator_type::const_reference				const_reference;
 			typedef typename allocator_type::const_pointer					const_pointer;
-			typedef S_tree_iterator<_nodePtr_>								iterator;// add const iter and const rev
-			typedef S_tree_iterator<const _nodePtr_>						const_iterator;
+			typedef tree_iterator<key_type, _nodePtr_>								iterator;// add const iter and const rev
+			typedef tree_iterator<const key_type, _nodePtr_>						const_iterator;
 			typedef ft::_reverseIter<const_iterator>						const_reverse_iterator;
 			typedef ft::_reverseIter<iterator>								reverse_iterator;
 			typedef typename _rbTree_::size_type							size_type;
@@ -188,7 +188,7 @@ namespace ft{
 				public:
 					bool	operator ()(const value_type& _x, const value_type& _y)
 					{
-						return (_comp(_x._first, _y._first));
+						return (_comp(_x.first, _y.first));
 					}
 			}; // END! class value_compare .
 		
@@ -231,22 +231,22 @@ namespace ft{
 			// Iterators:
 			iterator	begin()
 			{
-				return (iterator(this->_tree_.begin()));
+				return (this->_tree_.begin());
 			}
 
 			const_iterator	begin() const
 			{
-				return (const_iterator(this->_tree_.begin()));
+				return (this->_tree_.begin());
 			}
 
 			iterator	end()
 			{
-				return (iterator(this->_tree_.end()));
+				return (this->_tree_.end());
 			}
 			
 			const_iterator	end() const
 			{
-				return (const_iterator(this->_tree_.end()));
+				return (this->_tree_.end());
 			}
 
 			reverse_iterator	rbegin()
@@ -288,26 +288,26 @@ namespace ft{
 			}
 
 			// Insert methods:
-			pair<iterator, bool>	insert(const value_type& _pair)
+			pair<iterator, bool>	insert(const value_type& _key)
 			{
-				iterator	_found = this->find(_pair._first);
+				iterator	_found = this->find(_key);
 
 				if (_found == this->end())
 				{
-					this->_tree_._insert_(_pair);
-					_found = this->find(_pair._first);
+					this->_tree_._insert_(_key);
+					_found = this->find(_key);
 					return (pair<iterator, bool>(_found, true));
 				}
 				return (pair<iterator, bool>(_found, false));
 			}
 
-			iterator	insert(iterator pos, const value_type& _pair)
+			iterator	insert(iterator pos, const value_type& _key)
 			{
-				pos = this->find(_pair._first);
+				pos = this->find(_key);
 				if(pos != this->end())
 					return (pos);
-				this->insert(_pair);
-				return (this->find(_pair._first));
+				this->insert(_key);
+				return (this->find(_key));
 			}
 
 			template<typename _iter>
@@ -326,8 +326,8 @@ namespace ft{
 			// Erase methods:
 			void	erase(iterator pos)
 			{
-				if (this->find((*pos)._first) != this->end())
-					this->_tree_._delete_(pos._get_node_());
+				if (this->find(*pos) != this->end())
+					this->_tree_._delete_(*pos);
 			}
 
 			size_type	erase(const key_type& key)
@@ -350,7 +350,7 @@ namespace ft{
 			// Find methods :
 			const_iterator	find(const key_type& key) const
 			{
-				_nodePtr_ tmp = this->_tree_.find(ft::make_pair(key, key));
+				_nodePtr_ tmp = this->_tree_.find(key);
 
 				if (tmp != nullptr)
 					return (const_iteraotr(tmp));

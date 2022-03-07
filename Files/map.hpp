@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:23:00 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/06 01:04:49 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/07 21:39:06 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ namespace ft{
 				public:
 					bool	operator ()(const value_type& _x, const value_type& _y)
 					{
-						return (_comp(_x._first, _y._first));
+						return (_comp(_x.first, _y.first));
 					}
 			}; // END! class value_compare .
 		
@@ -74,7 +74,7 @@ namespace ft{
 		public:
 			// Constructors:
 			explicit	map(const key_compare& cmp = key_compare(), const allocator_type& allocator = allocator_type())
-					: _tree_(cmp, allocator), _alloc(allocator), _compare(cmp) { }
+					: _tree_(cmp, allocator), _alloc(allocator), _compare(cmp) {std::cout << "map created\n"; }
 			template<typename _iter>
 			map(_iter first, _iter last, const key_compare& cmp = value_compare(), const allocator_type& allocator = allocator_type()) :
 			_tree_(value_compare(cmp), allocator), _alloc(allocator), _compare(cmp)
@@ -105,22 +105,22 @@ namespace ft{
 			// Iterators:
 			iterator	begin()
 			{
-				return (iterator(this->_tree_.begin()));
+				return (this->_tree_.begin());
 			}
 
 			const_iterator	begin() const
 			{
-				return (const_iterator(this->_tree_.begin()));
+				return (this->_tree_.begin());
 			}
 
 			iterator	end()
 			{
-				return (iterator(this->_tree_.end()));
+				return (this->_tree_.end());
 			}
 			
 			const_iterator	end() const
 			{
-				return (const_iterator(this->_tree_.end()));
+				return (this->_tree_.end());
 			}
 
 			reverse_iterator	rbegin()
@@ -164,12 +164,14 @@ namespace ft{
 			// Insert methods:
 			pair<iterator, bool>	insert(const value_type& _pair)
 			{
-				iterator	_found = this->find(_pair._first);
+				iterator	_found = this->find(_pair.first);
 
+				// std::cout << "hi\n";
 				if (_found == this->end())
 				{
+				// std::cout << "hi\n";
 					this->_tree_._insert_(_pair);
-					_found = this->find(_pair._first);
+					_found = this->find(_pair.first);
 					return (pair<iterator, bool>(_found, true));
 				}
 				return (pair<iterator, bool>(_found, false));
@@ -177,11 +179,11 @@ namespace ft{
 
 			iterator	insert(iterator pos, const value_type& _pair)
 			{
-				pos = this->find(_pair._first);
+				pos = this->find(_pair.first);
 				if(pos != this->end())
 					return (pos);
 				this->insert(_pair);
-				return (this->find(_pair._first));
+				return (this->find(_pair.first));
 			}
 
 			template<typename _iter>
@@ -200,8 +202,8 @@ namespace ft{
 			// Erase methods:
 			void	erase(iterator pos)
 			{
-				if (this->find((*pos)._first) != this->end())
-					this->_tree_._delete_(pos._get_node_());
+				if (this->find((*pos).first) != this->end())
+					this->_tree_._delete_(pos->first);
 			}
 
 			size_type	erase(const key_type& key)
@@ -310,8 +312,8 @@ namespace ft{
 			{
 				iterator	_found = this->find(_key);
 				if (_found != this->end())
-					return ((*_found)._second);
-				return (*((this->insert(make_pair(_key,mapped_type())))._first))._second;
+					return ((*_found).second);
+				return (*((this->insert(make_pair(_key,mapped_type()))).first)).second;
 			}
 			
 	};// END MAP!
