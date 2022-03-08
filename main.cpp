@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:13:06 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/07 19:21:10 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/08 01:57:14 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,22 @@ int main()
 	test.insert(ft::pair<int, int>(3, 4));
 	test.insert(ft::pair<int, int>(2, 4));
 	test.insert(ft::pair<int, int>(6, 4));
+	test.insert(ft::pair<int, int>(23, 4));
+	
+	test.insert(ft::pair<int, int>(313, 4));
+	test.insert(ft::pair<int, int>(444, 4));
 
 	// std::cout << it->first <<(*it).second<< std::endl;
 	
 	// test.insert(ft::pair<int, int>(4, 4)); // if u insert another one it crushes 
 	ft::map<int , int >::iterator  it = test.begin();
+	test.erase(it);
 	ft::map<int, int>::iterator en = test.end();
 	// std::cout << en->first << std::endl;
-	// for(;it != test.end(); it++)
-	++it;
+	for(;it != test.end(); it++)
+		std::cout<<" = "<< it->first <<" => "<<(*it).second<< std::endl;
 	// it++;
 	// for(;it != test.end();it++)
-		std::cout<< test.size() <<" = size"<< it->first <<" => "<<(*it).second<< std::endl;
 	// test.insert(ft::pair<int, int>(-1, 4));
 	// ft::map<int, int>::iterator it = test.begin();
 	// std::cout << "hi" << std::endl;

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:23:00 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/07 21:39:06 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/08 01:59:25 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,27 +30,12 @@ namespace ft{
 	class map{
 
 		public:
-			
+		
 			typedef Key														key_type;
 			typedef T														mapped_type;
 			typedef Compare													key_compare;
 			typedef pair<const key_type, mapped_type>						value_type;
-			typedef	Alloc													allocator_type;
-			typedef _rbTree_<key_type, value_type, key_compare, allocator_type>		_rbTree_;
-			typedef typename ft::tree_node<value_type>*						_nodePtr_;
-			typedef typename allocator_type::pointer						pointer;
-			typedef typename allocator_type::reference						reference;
-			typedef typename allocator_type::const_reference				const_reference;
-			typedef typename allocator_type::const_pointer					const_pointer;
-			typedef typename _rbTree_::iterator								iterator;// add const iter and const rev
-			typedef typename _rbTree_::const_iterator						const_iterator;
-			typedef typename _rbTree_::const_reverse_iterator				const_reverse_iterator;
-			typedef typename _rbTree_::reverse_iterator						reverse_iterator;
-			typedef typename _rbTree_::size_type							size_type;
-			typedef typename _rbTree_::difference_type						difference_type;
-
-			// Class value_compare :
-
+			
 			class value_compare{
 				
 				friend class map;
@@ -65,6 +50,23 @@ namespace ft{
 						return (_comp(_x.first, _y.first));
 					}
 			}; // END! class value_compare .
+			
+			typedef	Alloc													allocator_type;
+			typedef _rbTree_<key_type, value_type, value_compare, allocator_type>		_rbTree_;
+			typedef typename ft::tree_node<value_type>*						_nodePtr_;
+			typedef typename allocator_type::pointer						pointer;
+			typedef typename allocator_type::reference						reference;
+			typedef typename allocator_type::const_reference				const_reference;
+			typedef typename allocator_type::const_pointer					const_pointer;
+			typedef typename _rbTree_::iterator								iterator;// add const iter and const rev
+			typedef typename _rbTree_::const_iterator						const_iterator;
+			typedef typename _rbTree_::const_reverse_iterator				const_reverse_iterator;
+			typedef typename _rbTree_::reverse_iterator						reverse_iterator;
+			typedef typename _rbTree_::size_type							size_type;
+			typedef typename _rbTree_::difference_type						difference_type;
+
+			// Class value_compare :
+
 		
 		private:
 			_rbTree_		_tree_;
@@ -203,7 +205,7 @@ namespace ft{
 			void	erase(iterator pos)
 			{
 				if (this->find((*pos).first) != this->end())
-					this->_tree_._delete_(pos->first);
+					this->_tree_._delete_(*pos);
 			}
 
 			size_type	erase(const key_type& key)
