@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:13:06 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/08 01:57:14 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/08 20:22:44 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,34 +45,52 @@ std::ostream& operator << (std::ostream& output, const Test& obj)
 int main()
 {
 	// std::map<std::string , int> tet;
-	ft::pair<int , int> t;
-	t.first = -1; t.second =1;
+	// ft::pair<int , int> t;
+	// t.first = -1; t.second =1;
 	// tet.insert(std::make_pair("hi", 2));
 	// std::map<std::string, int >::iterator t = tet.begin();
 
 	// std::cout << t->first << (*t).second<< std::endl;
 
 	ft::map<int, int> test;
-	// std::map<int, int>* mm = nullptr;
-	test.insert(t);
-	test.insert(ft::pair<int, int>(3, 4));
+	// ft::map<int, int>* mm = nullptr;
+	// test.insert(t);
+	test.insert(ft::pair<int, int>(1, 4));
 	test.insert(ft::pair<int, int>(2, 4));
+	test.insert(ft::pair<int, int>(3, 4));
+	test.insert(ft::pair<int, int>(4, 4));
+	test.insert(ft::pair<int, int>(5, 4));
 	test.insert(ft::pair<int, int>(6, 4));
-	test.insert(ft::pair<int, int>(23, 4));
-	
-	test.insert(ft::pair<int, int>(313, 4));
-	test.insert(ft::pair<int, int>(444, 4));
+	test.insert(ft::pair<int, int>(7, 4));
+	test.insert(ft::pair<int, int>(8, 4));
 
-	// std::cout << it->first <<(*it).second<< std::endl;
+	// ft::cout << it->first <<(*it).second<< ft::endl;
+	ft::map<int , int >::iterator  i = test.begin();
+	ft::map<int, int> another_test;
+	ft::map<int , int >::iterator  endd = i;
+	std::cout << i->first << std::endl;
+	i++;
+	std::cout << i->first << std::endl;
+	i++;
+	std::cout << i->first << std::endl;
+	endd = i;
+	++endd;
+	++endd;
+	another_test.insert(i, endd);
+	// test.erase(i++);
+	// test.erase(i++);
+	// test.erase(i++);
+	// test.erase(i);
+	test.erase(i, endd);
+	// test.erase(444);
+	// test.erase(2123);
 	
 	// test.insert(ft::pair<int, int>(4, 4)); // if u insert another one it crushes 
 	ft::map<int , int >::iterator  it = test.begin();
-	test.erase(it);
-	ft::map<int, int>::iterator en = test.end();
-	// std::cout << en->first << std::endl;
-	for(;it != test.end(); it++)
+	// // ft::cout << en->first << ft::endl;
+	for(;it != another_test.end(); it++)
 		std::cout<<" = "<< it->first <<" => "<<(*it).second<< std::endl;
-	// it++;
+	// // it++;
 	// for(;it != test.end();it++)
 	// test.insert(ft::pair<int, int>(-1, 4));
 	// ft::map<int, int>::iterator it = test.begin();

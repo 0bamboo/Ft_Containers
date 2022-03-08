@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/08 02:09:49 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/08 20:06:32 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ namespace ft{
 			typedef _pairType&										reference;
 			typedef std::bidirectional_iterator_tag					iterator_category;
 			typedef std::ptrdiff_t									difference_type;
-			typedef tree_iterator<_pairType, _nodetype>						_self;
+			typedef tree_iterator<_pairType, _nodetype>				_self;
 			typedef	typename tree_node<_nodetype>::_nodePtr			_node;// this the iterator type 
 		
 		private:
@@ -94,7 +94,8 @@ namespace ft{
 			{
 				tree_iterator	_tmp(*this);
 
-				this->_curr = next(this->_curr);
+				// this->_curr = next(this->_curr);
+				++(*this);
 				return (_tmp);
 			}
 
@@ -108,7 +109,7 @@ namespace ft{
 			{
 				tree_iterator	_tmp(*this);
 
-				this->_curr = prev(this->_curr);
+				--(*this);
 				return (_tmp);
 			}
 
@@ -389,8 +390,10 @@ namespace ft{
 			// node.isLeftChild and node.parent.isLeftChild
 			void	_rightRotate_(_nodePtr _nodeX) // _nodeX = grandparentnode
 			{
+				if (_nodeX == nullptr)
+					std::cout << "BOYAH!!\n";
 				_nodePtr _nodeY = _nodeX->_left;
-
+		
 				_nodeX->_left = _nodeY->_right;
 				if (_nodeX->_left != nullptr)
 					_nodeX->_left->_parent = _nodeX;
@@ -518,14 +521,14 @@ namespace ft{
 			}
 
 			// Upper Bound : returns first node whose key is greater than searching key.
-			iterator	upper_bound(const _valueType& key)
+			iterator	upper_bound(const key_type& key)
 			{
 				_nodePtr	_tmp_ = this->_root_;
 				_nodePtr	_res_ = this->_endNode_;
 
 				while(_tmp_ != nullptr)
 				{
-					if (this->_comp(key, _tmp_->_pair))
+					if (this->_comp(key, _tmp_->_pair.first))
 					{
 						_res_ = _tmp_;
 						_tmp_ = _tmp_->_left;
@@ -536,14 +539,14 @@ namespace ft{
 				return iterator(_tmp_);				
 			}
 			
-			const_iterator	upper_bound(const _valueType& key) const
+			const_iterator	upper_bound(const key_type& key) const
 			{
 				_nodePtr	_tmp_ = this->_root_;
 				_nodePtr	_res_ = this->_endNode_;
 
 				while(_tmp_ != nullptr)
 				{
-					if (this->_comp(key, _tmp_->_pair))
+					if (this->_comp(key, _tmp_->_pair.first))
 					{
 						_res_ = _tmp_;
 						_tmp_ = _tmp_->_left;
@@ -563,7 +566,7 @@ namespace ft{
 
 				while(_tmp_ != nullptr)
 				{
-					if (!this->_comp(_tmp_->_pair, key))
+					if (!this->_comp(_tmp_->_pair.first, key))
 					{
 						_res_ = _tmp_;
 						_tmp_ = _tmp_->_left;
@@ -657,11 +660,8 @@ namespace ft{
 				else
 					_newNodeParent->_right = _newNode;
 				// _newNode->_color = _RED_;
+				this->_fixAfterInsertion_(_newNode);
 				this->_size++;
-				std::cout << this->_size <<" | --hi--\n";
-				if (this->_size > 2)
-					this->_fixAfterInsertion_(_newNode);
-				std::cout <<" | -- after -- |\n";
 				this->_endNode_->_left = this->_root_;
 				this->_root_->_parent = this->_endNode_;
 			}
@@ -685,7 +685,7 @@ namespace ft{
 							// }
 							_parentSibling->_color = _BLACK_;
 							_fixingNode->_parent->_color = _BLACK_;
-							_fixingNode->_parent->_parent = _RED_;
+							_fixingNode->_parent->_parent->_color = _RED_;
 							_fixingNode = _fixingNode->_parent->_parent;
 						}
 						else
@@ -706,14 +706,15 @@ namespace ft{
 								// Perform the rightRotation on the grandparent
 							// }
 							_fixingNode->_parent->_color = _BLACK_;
-							_fixingNode->_parent->_parent = _RED_;
+							_fixingNode->_parent->_parent->_color = _RED_;
 							this->_rightRotate_(_fixingNode->_parent->_parent);
 							break ;
 						}
 					}
 					else
 					{
-						_nodePtr	_parentSibling = _parentSibling = _fixingNode->_parent->_parent->_left;
+						// std::cout << "------------------else\n";
+						_nodePtr	_parentSibling = _fixingNode->_parent->_parent->_left;
 						if (_parentSibling != nullptr && _parentSibling->_color == _RED_)
 						{
 							// Case 4 : Parent(isRightChild) , ParentSibling(isRed) , newNodeLocation(does not matter)
@@ -768,23 +769,23 @@ namespace ft{
 			// Delete :
 			void	_delete_(const _valueType&	_delKey_)
 			{
-				_nodePtr	_deletingNode_;
-				_nodePtr	_replacingNode_;
-				_nodePtr	_tmpNode_;
+				_nodePtr	_deletingNode_ = nullptr;
+				_nodePtr	_replacingNode_ = nullptr;
+				_nodePtr	_tmpNode_ = nullptr;
 				bool		_delColor_;
 				
 
 				_deletingNode_ = this->find(_delKey_);
+				std::cout <<"--> "<< _deletingNode_->_pair.first << std::endl;
 				if (!this->_root_ || _deletingNode_ == nullptr)
 					return ;
 				this->_endNode_->_left = nullptr;
 				this->_root_->_parent = nullptr;
-				_tmpNode_ = _deletingNode_;
 				_delColor_ = _deletingNode_->_color;
 				if (_deletingNode_->_left == nullptr) // case of no children or only one right child.
 				{
-				std::cout << "im in\n" ;
 					_replacingNode_ = _deletingNode_->_right;
+					_tmpNode_ = _replacingNode_;
 					this->_replace_(_deletingNode_, _replacingNode_);
 					this->_alloc.destroy(_deletingNode_);
 					this->_alloc.deallocate(_deletingNode_, 1);
@@ -792,6 +793,7 @@ namespace ft{
 				else if (_deletingNode_->_right == nullptr) // only one left child .
 				{
 					_replacingNode_ = _deletingNode_->_left;
+					_tmpNode_ = _replacingNode_;
 					this->_replace_(_deletingNode_, _replacingNode_);
 					this->_alloc.destroy(_deletingNode_);
 					this->_alloc.deallocate(_deletingNode_, 1);
