@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:23:00 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/08 20:29:05 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/09 00:45:51 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ namespace ft{
 		public:
 			// Constructors:
 			explicit	map(const key_compare& cmp = key_compare(), const allocator_type& allocator = allocator_type())
-					: _tree_(cmp, allocator), _alloc(allocator), _compare(cmp) {std::cout << "map created\n"; }
+					: _tree_(cmp, allocator), _alloc(allocator), _compare(cmp) { }
 			template<typename _iter>
 			map(_iter first, _iter last, const key_compare& cmp = value_compare(), const allocator_type& allocator = allocator_type()) :
 			_tree_(value_compare(cmp), allocator), _alloc(allocator), _compare(cmp)
@@ -192,7 +192,11 @@ namespace ft{
 			void	insert(_iter first, _iter last)
 			{
 				for(; first!=last; first++)
+				{
 					this->insert(*first);
+					std::cout << "inserted! - ";
+				}
+				std::cout << std::endl;
 			}
 
 			// Clear : delete everything.
@@ -221,8 +225,8 @@ namespace ft{
 
 			void	erase(iterator first, iterator last)
 			{
-				for(;first!=last;first++)
-					this->erase(first);
+				while (first!=last)
+					this->erase(first++);
 			}
 
 			// Find methods :

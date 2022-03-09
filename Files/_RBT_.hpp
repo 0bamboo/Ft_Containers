@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/08 20:06:32 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/09 00:26:39 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,7 +308,8 @@ namespace ft{
 		
 		public:
 			typedef		_pairValue														_valueType;
-			typedef 	tree_node<_pairValue>*											_nodePtr;
+			typedef 	struct tree_node<_pairValue>											_node;
+			typedef	_node*																_nodePtr;
 			typedef		Key																key_type;
 			
 			// for holding another allocator for the tree_node type
@@ -373,8 +374,8 @@ namespace ft{
 				_nodePtr _nodeY = _nodeX->_right;
 
 				_nodeX->_right = _nodeY->_left; // Turn nodeY's subtree into nodeX's subtree
-				if (_nodeX->_right != nullptr)
-					_nodeX->_right->_parent = _nodeX;
+				if (_nodeY->_left != nullptr)
+					_nodeY->_left->_parent = _nodeX;
 				_nodeY->_parent = _nodeX->_parent;
 				if (_nodeX->_parent == nullptr)
 					this->_root_ = _nodeY; // add the end node -> to the new root
@@ -395,15 +396,15 @@ namespace ft{
 				_nodePtr _nodeY = _nodeX->_left;
 		
 				_nodeX->_left = _nodeY->_right;
-				if (_nodeX->_left != nullptr)
-					_nodeX->_left->_parent = _nodeX;
+				if (_nodeY->_right != nullptr)
+					_nodeY->_right->_parent = _nodeX;
 				_nodeY->_parent = _nodeX->_parent;
 				if (_nodeX->_parent == nullptr)
 					this->_root_ = _nodeY;
-				else if (_isLeftChild_(_nodeX))
-					_nodeX->_parent->_left = _nodeY;
-				else
+				else if (!_isLeftChild_(_nodeX))
 					_nodeX->_parent->_right = _nodeY;
+				else
+					_nodeX->_parent->_left = _nodeY;
 				_nodeY->_right = _nodeX;
 				_nodeX->_parent = _nodeY;
 			}
@@ -433,6 +434,7 @@ namespace ft{
 				}
 				return (_tmp);
 			}
+			
 			void	_free_(_nodePtr _currNode_)
 			{
 				if (_currNode_ != nullptr)
@@ -623,11 +625,11 @@ namespace ft{
 				{
 					if (!this->_comp(_pair, _curr->_pair) && !this->_comp(_curr->_pair, _pair))
 						break ;
-					_curr = this->_comp(_pair, _curr->_pair) ? _curr->_left : _curr->_right;
+					_curr = this->_comp(_curr->_pair, _pair) ? _curr->_right : _curr->_left;
 				}
 				return (_curr);
 			}
-
+	
 			// Insertion method :
 			void	_insert_(const _valueType& _pair)
 			{
@@ -648,7 +650,7 @@ namespace ft{
 				if (this->find(_pair) != nullptr)
 					return ;
 				this->_endNode_->_left = nullptr;
-				_root_->_parent = nullptr;
+				this->_root_->_parent = nullptr;
 				while (_tmp != nullptr)
 				{
 					_newNodeParent = _tmp;
@@ -659,7 +661,7 @@ namespace ft{
 					_newNodeParent->_left = _newNode;
 				else
 					_newNodeParent->_right = _newNode;
-				// _newNode->_color = _RED_;
+				_newNode->_color = _RED_;
 				this->_fixAfterInsertion_(_newNode);
 				this->_size++;
 				this->_endNode_->_left = this->_root_;
@@ -771,66 +773,67 @@ namespace ft{
 			{
 				_nodePtr	_deletingNode_ = nullptr;
 				_nodePtr	_replacingNode_ = nullptr;
-				_nodePtr	_tmpNode_ = nullptr;
 				bool		_delColor_;
 				
 
 				_deletingNode_ = this->find(_delKey_);
-				std::cout <<"--> "<< _deletingNode_->_pair.first << std::endl;
+				std::cout << "DELETED ----[ "<< _deletingNode_->_pair.first << " ]----\n";
 				if (!this->_root_ || _deletingNode_ == nullptr)
 					return ;
 				this->_endNode_->_left = nullptr;
 				this->_root_->_parent = nullptr;
+				_nodePtr	_tmpNode_ = _deletingNode_;
 				_delColor_ = _deletingNode_->_color;
 				if (_deletingNode_->_left == nullptr) // case of no children or only one right child.
 				{
 					_replacingNode_ = _deletingNode_->_right;
-					_tmpNode_ = _replacingNode_;
-					this->_replace_(_deletingNode_, _replacingNode_);
+					// _tmpNode_ = _replacingNode_;
+					this->_replace_(_deletingNode_, _deletingNode_->_right);
 					this->_alloc.destroy(_deletingNode_);
 					this->_alloc.deallocate(_deletingNode_, 1);
 				}
 				else if (_deletingNode_->_right == nullptr) // only one left child .
 				{
+				// std::cout <<"--> "<< _deletingNode_->_pair.first << std::endl;
 					_replacingNode_ = _deletingNode_->_left;
 					_tmpNode_ = _replacingNode_;
-					this->_replace_(_deletingNode_, _replacingNode_);
+					this->_replace_(_deletingNode_, _deletingNode_->_left);
 					this->_alloc.destroy(_deletingNode_);
 					this->_alloc.deallocate(_deletingNode_, 1);
 				}
 				else // Case of two children.
 				{
-					_replacingNode_ = this->_treeMinimum_(_deletingNode_->_right);
-					_delColor_ = _replacingNode_->_color;
-					_tmpNode_ = _replacingNode_->_right;
-					if (_replacingNode_->_parent != nullptr && _replacingNode_->_parent != _deletingNode_) // In case of the replacing node is not the direct child of the deleting node.parent. 
+					_tmpNode_ = this->_treeMinimum_(_deletingNode_->_right);
+					_delColor_ = _tmpNode_->_color;
+					_replacingNode_ = _tmpNode_->_right;
+					if (_tmpNode_->_parent != nullptr && _tmpNode_->_parent != _deletingNode_) // In case of the replacing node is not the direct child of the deleting node.parent. 
 					{
-						this->_replace_(_replacingNode_, _replacingNode_->_right);
-						_replacingNode_->_right = _deletingNode_->_right;
-						_replacingNode_->_right->_parent = _replacingNode_;
+						this->_replace_(_tmpNode_, _tmpNode_->_right);
+						_tmpNode_->_right = _deletingNode_->_right;
+						_tmpNode_->_right->_parent = _tmpNode_;
 					}
-					this->_replace_(_deletingNode_, _replacingNode_);
-					_replacingNode_->_left = _deletingNode_->_left;
-					_replacingNode_->_left->_parent = _replacingNode_;
-					_replacingNode_->_color = _deletingNode_->_color;
+					this->_replace_(_deletingNode_, _tmpNode_);
+					_tmpNode_->_left = _deletingNode_->_left;
+					_tmpNode_->_left->_parent = _tmpNode_;
+					_tmpNode_->_color = _deletingNode_->_color;
 					this->_alloc.destroy(_deletingNode_);
 					this->_alloc.deallocate(_deletingNode_, 1);
 				}
-				if (_delColor_ == _BLACK_ && _tmpNode_ != nullptr)
-					this->_fixAfterDeletion_(_tmpNode_);
+				if (_delColor_ == _BLACK_ && _replacingNode_ != nullptr)
+					this->_fixAfterDeletion_(_replacingNode_);
 				if (this->_root_ != nullptr)
 				{
 					this->_endNode_->_left = this->_root_;
 					this->_root_->_parent = this->_endNode_;
 				}
 				this->_size--;
+				
 			}
 
 			void	_fixAfterDeletion_(_nodePtr	_current)
 			{
 				while (_current != this->_root_ && _current->_color == _BLACK_)
 				{
-					std::cout << "im in\n" ;
 					if (_current != nullptr && this->_isLeftChild_(_current))
 					{
 						_nodePtr	_sibling_ = _current->_parent->_right;
