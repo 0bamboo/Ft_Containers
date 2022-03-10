@@ -12,6 +12,8 @@
 // #include "set.hpp"
 // #include "stack.hpp"
 #include "Files/vector.hpp"
+#include "Files/map.hpp"
+#include "Files/set.hpp"
 // #include "algorithm.hpp"
 #include <cstdlib>
 
@@ -55,241 +57,241 @@ struct Buffer
 
 // Stack tests
 
-void stack_test() {
-    MuntantStack<int, ns::vector<int> > s;
-    MuntantStack<int, ns::vector<int> > s1;
-    for (int i = 0; i < 10; i++)
-        s.push(i);
-    for (int i = 0; i < 11; i++)
-        s1.push(i);
-    MuntantStack<int, ns::vector<int> >::iterator it = s.begin();
-    for (; it != s.end(); it++)
-        std::cout << *it << std::endl;
-    std::cout << "=========== empty ===========\n";
-    std::cout << s.empty() << std::endl;
-    std::cout << "=========== size ===========\n";
-    std::cout << s.size() << std::endl;
-    std::cout << "=========== pop ===========\n";
-    while (!s.empty()) {
-        std::cout << ' ' << s.top();
-        s.pop();
-    }
-    std::cout << "\n";
-    std::cout << (s == s1) << std::endl;
-    std::cout << (s != s1) << std::endl;
-    std::cout << (s < s1) << std::endl;
-    std::cout << (s <= s1) << std::endl;
-    std::cout << (s > s1) << std::endl;
-    std::cout << (s >= s1) << std::endl;
-}
+// void stack_test() {
+//     MuntantStack<int, ns::vector<int> > s;
+//     MuntantStack<int, ns::vector<int> > s1;
+//     for (int i = 0; i < 10; i++)
+//         s.push(i);
+//     for (int i = 0; i < 11; i++)
+//         s1.push(i);
+//     MuntantStack<int, ns::vector<int> >::iterator it = s.begin();
+//     for (; it != s.end(); it++)
+//         std::cout << *it << std::endl;
+//     std::cout << "=========== empty ===========\n";
+//     std::cout << s.empty() << std::endl;
+//     std::cout << "=========== size ===========\n";
+//     std::cout << s.size() << std::endl;
+//     std::cout << "=========== pop ===========\n";
+//     while (!s.empty()) {
+//         std::cout << ' ' << s.top();
+//         s.pop();
+//     }
+//     std::cout << "\n";
+//     std::cout << (s == s1) << std::endl;
+//     std::cout << (s != s1) << std::endl;
+//     std::cout << (s < s1) << std::endl;
+//     std::cout << (s <= s1) << std::endl;
+//     std::cout << (s > s1) << std::endl;
+//     std::cout << (s >= s1) << std::endl;
+// }
 
 
 // Vector tests
-void vector_iterator_test() {
-    std::string arr[] = {"1", "2", "3", "4", "5", "6"};
-    ns::vector<std::string> v(arr, arr + static_cast<int>(sizeof(arr) / sizeof(std::string)));
-    // ns::vector<std::string> v;
-    v.push_back("1");
-    v.push_back("2");
-    v.push_back("3");
-    v.push_back("4");
-    v.push_back("5");
-    ns::vector<std::string>::const_iterator it = v.begin();
-    ns::vector<std::string>::iterator ite = v.end();
-    for (; it != ite; it++)
-        std::cout << *it << std::endl; 
-    std::cout << "size of vector = " << v.size() << std::endl;
-    std::cout << "capacity of vector = " << v.capacity() << std::endl;
-    ns::vector<std::string> vector_swap;
-    for (int i = 0; i < 12; i++)
-        vector_swap.push_back("1");
-    // vector_swap = v;
-    std::cout << "===========\n";
-    std::cout << "size of vector_swap = " << vector_swap.size() << std::endl;
-    std::cout << "capacity of vector_swap = " << vector_swap.capacity() << std::endl;
-}
-void vector_capacity_test() {
-    ns::vector<unsigned long> vector_int(10, 5);
-    std::cout << "max size = " << vector_int.max_size() << std::endl;
-    std::cout << "size = " << vector_int.size() << std::endl;
-    std::cout << "capacity = " << vector_int.capacity() << std::endl;
-    vector_int.push_back(1);
-    std::cout << "==== after push_back ====\n";
-    std::cout << "size = " << vector_int.size() << std::endl;
-    std::cout << "capacity = " << vector_int.capacity() << std::endl;
-    vector_int.resize(50, 2);
-    std::cout << "==== vector_int after resize ====\n";
-    std::cout << "size = " << vector_int.size() << std::endl;
-    std::cout << "capacity = " << vector_int.capacity() << std::endl;
-    vector_int.resize(10, 3);
-    std::cout << "size = " << vector_int.size() << std::endl;
-    std::cout << "capacity = " << vector_int.capacity() << std::endl;
-    std::cout << "==== vector_int after reserve ====\n";
-    vector_int.reserve(100);
-    std::cout << "size = " << vector_int.size() << std::endl;
-    std::cout << "capacity = " << vector_int.capacity() << std::endl;
-}
-void vector_access_test() {
-    int arr[] = {1, 2, 3, 4, 5, 6, 7};
-    ns::vector<int> vector_string(arr, arr + static_cast<int>(sizeof(arr) / sizeof(int)));
-    std::cout << "==== test try catch ====\n";
-    try {
-        for (size_t i = 0; i < 8; i++)
-            std::cout << vector_string.at(i) << std::endl;
-    } catch(const std::exception& e) {
-        std::cout << e.what() << std::endl;
-    }
-}
-void vector_modifiers_test() {
-    ns::vector<int> vector_int;
-    ns::vector<int> vector_range;
-    std::cout << "==== assign range method ====\n";
-    for (int i = 0; i < 10; i++)
-        vector_range.push_back(i);
-    // ns::vector<int>::iterator  it = vector_range.begin();
-    // for (; it != vector_range.end(); it++)
-    //     std::cout << " | " <<*it<< " | ";
-    // std::cout << vector_range.end() - vector_range.begin() <<"\n";
-    vector_int.assign(vector_range.begin(), vector_range.end());
-    std::cout <<"|"<< vector_int.size() <<"|"<< std::endl;
-    std::cout << "vector_int size: " << vector_int.size() << std::endl;
-    std::cout << "vector_int capacity: " << vector_int.capacity() << std::endl;
-    std::cout << "==== assign method ====\n";
-    ns::vector<int> v_range(15, 5);
-    v_range.assign(10, 10);
-    std::cout << "v_range size: " << v_range.size() << std::endl;
-    std::cout << "v_range capacity: " << v_range.capacity() << std::endl;
-}
+// void vector_iterator_test() {
+//     std::string arr[] = {"1", "2", "3", "4", "5", "6"};
+//     ns::vector<std::string> v(arr, arr + static_cast<int>(sizeof(arr) / sizeof(std::string)));
+//     // ns::vector<std::string> v;
+//     v.push_back("1");
+//     v.push_back("2");
+//     v.push_back("3");
+//     v.push_back("4");
+//     v.push_back("5");
+//     ns::vector<std::string>::const_iterator it = v.begin();
+//     ns::vector<std::string>::iterator ite = v.end();
+//     for (; it != ite; it++)
+//         std::cout << *it << std::endl; 
+//     std::cout << "size of vector = " << v.size() << std::endl;
+//     std::cout << "capacity of vector = " << v.capacity() << std::endl;
+//     ns::vector<std::string> vector_swap;
+//     for (int i = 0; i < 12; i++)
+//         vector_swap.push_back("1");
+//     // vector_swap = v;
+//     std::cout << "===========\n";
+//     std::cout << "size of vector_swap = " << vector_swap.size() << std::endl;
+//     std::cout << "capacity of vector_swap = " << vector_swap.capacity() << std::endl;
+// }
+// void vector_capacity_test() {
+//     ns::vector<unsigned long> vector_int(10, 5);
+//     std::cout << "max size = " << vector_int.max_size() << std::endl;
+//     std::cout << "size = " << vector_int.size() << std::endl;
+//     std::cout << "capacity = " << vector_int.capacity() << std::endl;
+//     vector_int.push_back(1);
+//     std::cout << "==== after push_back ====\n";
+//     std::cout << "size = " << vector_int.size() << std::endl;
+//     std::cout << "capacity = " << vector_int.capacity() << std::endl;
+//     vector_int.resize(50, 2);
+//     std::cout << "==== vector_int after resize ====\n";
+//     std::cout << "size = " << vector_int.size() << std::endl;
+//     std::cout << "capacity = " << vector_int.capacity() << std::endl;
+//     vector_int.resize(10, 3);
+//     std::cout << "size = " << vector_int.size() << std::endl;
+//     std::cout << "capacity = " << vector_int.capacity() << std::endl;
+//     std::cout << "==== vector_int after reserve ====\n";
+//     vector_int.reserve(100);
+//     std::cout << "size = " << vector_int.size() << std::endl;
+//     std::cout << "capacity = " << vector_int.capacity() << std::endl;
+// }
+// void vector_access_test() {
+//     int arr[] = {1, 2, 3, 4, 5, 6, 7};
+//     ns::vector<int> vector_string(arr, arr + static_cast<int>(sizeof(arr) / sizeof(int)));
+//     std::cout << "==== test try catch ====\n";
+//     try {
+//         for (size_t i = 0; i < 8; i++)
+//             std::cout << vector_string.at(i) << std::endl;
+//     } catch(const std::exception& e) {
+//         std::cout << e.what() << std::endl;
+//     }
+// }
+// void vector_modifiers_test() {
+//     ns::vector<int> vector_int;
+//     ns::vector<int> vector_range;
+//     std::cout << "==== assign range method ====\n";
+//     for (int i = 0; i < 10; i++)
+//         vector_range.push_back(i);
+//     // ns::vector<int>::iterator  it = vector_range.begin();
+//     // for (; it != vector_range.end(); it++)
+//     //     std::cout << " | " <<*it<< " | ";
+//     // std::cout << vector_range.end() - vector_range.begin() <<"\n";
+//     vector_int.assign(vector_range.begin(), vector_range.end());
+//     std::cout <<"|"<< vector_int.size() <<"|"<< std::endl;
+//     std::cout << "vector_int size: " << vector_int.size() << std::endl;
+//     std::cout << "vector_int capacity: " << vector_int.capacity() << std::endl;
+//     std::cout << "==== assign method ====\n";
+//     ns::vector<int> v_range(15, 5);
+//     v_range.assign(10, 10);
+//     std::cout << "v_range size: " << v_range.size() << std::endl;
+//     std::cout << "v_range capacity: " << v_range.capacity() << std::endl;
+// }
 
-void vector_modifiers_second_test() {
-    ns::vector<int> vector_int;
-    vector_int.assign(100, 2);
-    std::cout << "insert(p, v)\n";
-    std::cout << "vector_int size: " << vector_int.size() << std::endl;
-    std::cout << "vector_int capactiy: " << vector_int.capacity() << std::endl;
-    ns::vector<int>::iterator it = vector_int.insert(vector_int.begin(), 10);
-    std::cout << "vector_int size: " << vector_int.size() << std::endl;
-    std::cout << "vector_int capactiy: " << vector_int.capacity() << std::endl;
-    std::cout << "insert(p, v)\n";
-    std::cout <<"first element : "<< *it << std::endl;
-    std::cout << "--------------------------\n";
-    it = vector_int.insert(vector_int.end(), 100);
-    std::cout << "--------------------------\n";
-    std::cout <<"last element : "<< *it << std::endl;
-    std::cout << "end = " << *vector_int.end() << std::endl;
-    int i = 0;
-    for (ns::vector<int>::iterator b = vector_int.begin(); b != vector_int.end(); b++, i++)
-    {
-        std::cout <<"idx = "<<i<<" => "<< *b<< " | size = " <<vector_int.size()<< std::endl;
-    }
-    std::cout << vector_int[12] << std::endl;
-    std::cout << "insert(p, n, v)\n";
-    vector_int.insert(it, 138, 17); // n = 70
-    std::cout << "vector_int size: " << vector_int.size() << std::endl;
-    std::cout << "vector_int capactiy: " << vector_int.capacity() << std::endl;
+// void vector_modifiers_second_test() {
+//     ns::vector<int> vector_int;
+//     vector_int.assign(100, 2);
+//     std::cout << "insert(p, v)\n";
+//     std::cout << "vector_int size: " << vector_int.size() << std::endl;
+//     std::cout << "vector_int capactiy: " << vector_int.capacity() << std::endl;
+//     ns::vector<int>::iterator it = vector_int.insert(vector_int.begin(), 10);
+//     std::cout << "vector_int size: " << vector_int.size() << std::endl;
+//     std::cout << "vector_int capactiy: " << vector_int.capacity() << std::endl;
+//     std::cout << "insert(p, v)\n";
+//     std::cout <<"first element : "<< *it << std::endl;
+//     std::cout << "--------------------------\n";
+//     it = vector_int.insert(vector_int.end(), 100);
+//     std::cout << "--------------------------\n";
+//     std::cout <<"last element : "<< *it << std::endl;
+//     std::cout << "end = " << *vector_int.end() << std::endl;
+//     int i = 0;
+//     for (ns::vector<int>::iterator b = vector_int.begin(); b != vector_int.end(); b++, i++)
+//     {
+//         std::cout <<"idx = "<<i<<" => "<< *b<< " | size = " <<vector_int.size()<< std::endl;
+//     }
+//     std::cout << vector_int[12] << std::endl;
+//     std::cout << "insert(p, n, v)\n";
+//     vector_int.insert(it, 138, 17); // n = 70
+//     std::cout << "vector_int size: " << vector_int.size() << std::endl;
+//     std::cout << "vector_int capactiy: " << vector_int.capacity() << std::endl;
     
-    for (ns::vector<int>::iterator b = vector_int.begin(); b != vector_int.end(); b++)
-        std::cout << *b<< std::endl;
-    ns::vector<int> vector_range;
-    vector_range.assign(50, 5);
-    ns::vector<int>::iterator itv = vector_range.begin();
-    // itv++;
-    // itv++;
-    // itv++;
-    std::cout << "insert(p, f, l)\n";
-    vector_range.insert(itv, vector_int.begin(), vector_int.end());
-    for (int i = 0; i < (int)vector_range.size(); i++)
-        std::cout << vector_range[i] << std::endl;
-    std::cout << "vector_int size: " << vector_int.size() << std::endl;
-    std::cout << "vector_int capactiy: " << vector_int.capacity() << std::endl;
-    std::cout << "vector_range size: " << vector_range.size() << std::endl;
-    std::cout << "vector_range capactiy: " << vector_range.capacity() << std::endl;
-    ns::vector<int>::iterator r = vector_int.erase(vector_int.begin());
-    std::cout << *r << std::endl;
-    ns::vector<int>::iterator e = vector_int.end();
-    // e--;
-    e--;
-    e--;
-    vector_int.erase(vector_int.begin(), e);
-    for (int i = 0; i < (int)vector_int.size(); i++)
-        std::cout << vector_int[i] << std::endl;
-    std::cout << "vector_int size: " << vector_int.size() << std::endl;
-    std::cout << "vector_int capactiy: " << vector_int.capacity() << std::endl;
-    vector_range.clear();
-    std::cout << "vector_range size: " << vector_range.size() << std::endl;
-    std::cout << "vector_range capactiy: " << vector_range.capacity() << std::endl;
-}
+//     for (ns::vector<int>::iterator b = vector_int.begin(); b != vector_int.end(); b++)
+//         std::cout << *b<< std::endl;
+//     ns::vector<int> vector_range;
+//     vector_range.assign(50, 5);
+//     ns::vector<int>::iterator itv = vector_range.begin();
+//     // itv++;
+//     // itv++;
+//     // itv++;
+//     std::cout << "insert(p, f, l)\n";
+//     vector_range.insert(itv, vector_int.begin(), vector_int.end());
+//     for (int i = 0; i < (int)vector_range.size(); i++)
+//         std::cout << vector_range[i] << std::endl;
+//     std::cout << "vector_int size: " << vector_int.size() << std::endl;
+//     std::cout << "vector_int capactiy: " << vector_int.capacity() << std::endl;
+//     std::cout << "vector_range size: " << vector_range.size() << std::endl;
+//     std::cout << "vector_range capactiy: " << vector_range.capacity() << std::endl;
+//     ns::vector<int>::iterator r = vector_int.erase(vector_int.begin());
+//     std::cout << *r << std::endl;
+//     ns::vector<int>::iterator e = vector_int.end();
+//     // e--;
+//     e--;
+//     e--;
+//     vector_int.erase(vector_int.begin(), e);
+//     for (int i = 0; i < (int)vector_int.size(); i++)
+//         std::cout << vector_int[i] << std::endl;
+//     std::cout << "vector_int size: " << vector_int.size() << std::endl;
+//     std::cout << "vector_int capactiy: " << vector_int.capacity() << std::endl;
+//     vector_range.clear();
+//     std::cout << "vector_range size: " << vector_range.size() << std::endl;
+//     std::cout << "vector_range capactiy: " << vector_range.capacity() << std::endl;
+// }
 
-void vector_random_test() {
-    int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
-    ns::vector<int> vector_range(arr, arr + static_cast<int>(sizeof(arr) / sizeof(int)));
-    ns::vector<int> vector_int;
-    for (int i = 0; i < 15; i++)
-        vector_int.push_back(i); 
-    std::cout << "size of vector_int: " << vector_int.size() << std::endl;
-    std::cout << "size of vector_range: " << vector_range.size() << std::endl;
-    std::cout << "capacity of vector_range: " << vector_range.capacity() << std::endl;
-    std::cout << "==== after = operator ====\n";
-    vector_int = vector_range;
-    std::cout << "size of vector_int: " << vector_int.size() << std::endl;
-    std::cout << "capacity of vector_int: " << vector_int.capacity() << std::endl;
-    for (int i = 0; i < (int)vector_int.size(); i++)
-        std::cout << vector_int[i] << std::endl;
-    std::cout << "=== copy constructor ====\n";
-    ns::vector<int> vector_copy(vector_int);
-    for (int i = 0; i < (int)vector_copy.size(); i++)
-        std::cout << vector_copy[i] << std::endl; 
-    std::cout << "size of vector_copy: " << vector_copy.size() << std::endl;
-    std::cout << "capacity of vector_copy: " << vector_copy.capacity() << std::endl;
-}
-void vector_time_test() {
-    ns::vector<int> vector_int;
-    ns::vector<int> vector_swap;
-    for (int i = 0; i < COUNT; i++)
-        vector_int.push_back(i);
-    vector_swap.swap(vector_int);
-    std::cout << "vector_swap size: " << vector_swap.size() << std::endl;
-    std::cout << "vector_swap capacity: " << vector_swap.capacity() << std::endl;
-    for (int i = 0; i < COUNT; i++)
-        std::cout << vector_swap[i] << std::endl;
-}
+// void vector_random_test() {
+//     int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
+//     ns::vector<int> vector_range(arr, arr + static_cast<int>(sizeof(arr) / sizeof(int)));
+//     ns::vector<int> vector_int;
+//     for (int i = 0; i < 15; i++)
+//         vector_int.push_back(i); 
+//     std::cout << "size of vector_int: " << vector_int.size() << std::endl;
+//     std::cout << "size of vector_range: " << vector_range.size() << std::endl;
+//     std::cout << "capacity of vector_range: " << vector_range.capacity() << std::endl;
+//     std::cout << "==== after = operator ====\n";
+//     vector_int = vector_range;
+//     std::cout << "size of vector_int: " << vector_int.size() << std::endl;
+//     std::cout << "capacity of vector_int: " << vector_int.capacity() << std::endl;
+//     for (int i = 0; i < (int)vector_int.size(); i++)
+//         std::cout << vector_int[i] << std::endl;
+//     std::cout << "=== copy constructor ====\n";
+//     ns::vector<int> vector_copy(vector_int);
+//     for (int i = 0; i < (int)vector_copy.size(); i++)
+//         std::cout << vector_copy[i] << std::endl; 
+//     std::cout << "size of vector_copy: " << vector_copy.size() << std::endl;
+//     std::cout << "capacity of vector_copy: " << vector_copy.capacity() << std::endl;
+// }
+// void vector_time_test() {
+//     ns::vector<int> vector_int;
+//     ns::vector<int> vector_swap;
+//     for (int i = 0; i < COUNT; i++)
+//         vector_int.push_back(i);
+//     vector_swap.swap(vector_int);
+//     std::cout << "vector_swap size: " << vector_swap.size() << std::endl;
+//     std::cout << "vector_swap capacity: " << vector_swap.capacity() << std::endl;
+//     for (int i = 0; i < COUNT; i++)
+//         std::cout << vector_swap[i] << std::endl;
+// }
 
-void vector_test_operations() {
-    ns::vector<int> v;
-    ns::vector<int> v1;
-    v.assign(10, 15);
-    for (int i = 0; i < 12; i++)
-        v.push_back(i);
-    std::cout << (v == v1) << std::endl;
-    std::cout << (v != v1) << std::endl;
-    std::cout << (v < v1) << std::endl;
-    std::cout << (v <= v1) << std::endl;
-    std::cout << (v > v1) << std::endl;
-    std::cout << (v >= v1) << std::endl;
-}
+// void vector_test_operations() {
+//     ns::vector<int> v;
+//     ns::vector<int> v1;
+//     v.assign(10, 15);
+//     for (int i = 0; i < 12; i++)
+//         v.push_back(i);
+//     std::cout << (v == v1) << std::endl;
+//     std::cout << (v != v1) << std::endl;
+//     std::cout << (v < v1) << std::endl;
+//     std::cout << (v <= v1) << std::endl;
+//     std::cout << (v > v1) << std::endl;
+//     std::cout << (v >= v1) << std::endl;
+// }
 
-void vector_reverse_iterator_test() {
+// void vector_reverse_iterator_test() {
 
-    ns::vector<int> vector_int;
-    for (int i = -1; i < 10; i++)
-        vector_int.push_back(i);
-    ns::vector<int>::reverse_iterator it = vector_int.rbegin();
-    ns::vector<int>::reverse_iterator itend = vector_int.rend();
-    // std::cout << "First element : "<< *(it)<< "  last element : "<< * (itend)<<std::endl;
-    // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
-    // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
-    // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
-    // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
-    // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
-    // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
-    // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
-    // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
-    // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
-    // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
-    // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
-    for (; it != itend; it++)
-        std::cout << *it << std::endl;
-}
+//     ns::vector<int> vector_int;
+//     for (int i = -1; i < 10; i++)
+//         vector_int.push_back(i);
+//     ns::vector<int>::reverse_iterator it = vector_int.rbegin();
+//     ns::vector<int>::reverse_iterator itend = vector_int.rend();
+//     // std::cout << "First element : "<< *(it)<< "  last element : "<< * (itend)<<std::endl;
+//     // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
+//     // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
+//     // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
+//     // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
+//     // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
+//     // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
+//     // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
+//     // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
+//     // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
+//     // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
+//     // std::cout << "First element : "<< *(++it)<< "  last element : "<< * (--itend)<<std::endl;
+//     for (; it != itend; it++)
+//         std::cout << *it << std::endl;
+// }
 
 // Map tests
 // void map_iterator_test() {
@@ -456,16 +458,16 @@ void vector_reverse_iterator_test() {
 // 	std::cout << "upper_bound points to " << ret.second->first << std::endl;
 // 	std::cout << "======================= EQUAL_RANGE END =======================\n\n";
 // }
-// void map_time_test() {
-// 	ns::map<int, int> _map_int;
-// 	ns::map<int, int> _map_swap;
+void map_time_test() {
+	ns::map<std::string, int> _map_int;
+	// ns::map<std::string, int> _map_swap;
 
-// 	for (int i = 0; i < COUNT; i++)
-// 		_map_int.insert(ns::pair<int, int>(i, i));
-// 	_map_swap.swap(_map_int);
-// 	for (int i = 0; i < COUNT; i++)
-// 		std::cout << _map_swap[i] << std::endl;
-// }
+	for (int i = 0; i < 2000; i++)
+		_map_int.insert(ns::pair<std::string, int>(std::to_string(i), i));
+	// _map_swap.swap(_map_int);
+	// for (int i = 0; i < COUNT; i++)
+	// 	std::cout << _map_swap[std::to_string(i)] << std::endl;
+}
 
 // void map_reverse_iterator_test() {
 //     ns::map<int, char> _map;
@@ -680,7 +682,7 @@ void vector_reverse_iterator_test() {
 
 int main() {
     // Vector
-    vector_iterator_test();
+    // vector_iterator_test();
     // vector_capacity_test();
     // vector_modifiers_test();
     // vector_modifiers_second_test();
@@ -700,7 +702,7 @@ int main() {
     // map_modifiers_test();
     // map_operations_test();
     // map_reverse_iterator_test();
-    // // map_time_test();
+    map_time_test();
 
     // // Set
     // set_iterator_test();

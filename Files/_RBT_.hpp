@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/09 00:26:39 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/10 08:55:09 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ namespace ft{
 			typedef std::bidirectional_iterator_tag					iterator_category;
 			typedef std::ptrdiff_t									difference_type;
 			typedef tree_iterator<_pairType, _nodetype>				_self;
-			typedef	typename tree_node<_nodetype>::_nodePtr			_node;// this the iterator type 
 		
 		private:
 			iterator_type	_curr;
@@ -303,7 +302,7 @@ namespace ft{
 
 
 	// RED BLACK TREE TEMPLATE CLASS :
-	template<typename Key, typename _pairValue, typename _Compare, typename _Alloc>
+	template<typename Key, typename _pairValue, typename _Alloc,typename _Compare = std::less<_pairValue> >
 	class	_rbTree_{
 		
 		public:
@@ -391,8 +390,6 @@ namespace ft{
 			// node.isLeftChild and node.parent.isLeftChild
 			void	_rightRotate_(_nodePtr _nodeX) // _nodeX = grandparentnode
 			{
-				if (_nodeX == nullptr)
-					std::cout << "BOYAH!!\n";
 				_nodePtr _nodeY = _nodeX->_left;
 		
 				_nodeX->_left = _nodeY->_right;
@@ -510,10 +507,10 @@ namespace ft{
 			{
 				return (this->_size);
 			}
-			// Max size :
-			size_type	max_size()
+
+			size_type	max_size() const
 			{
-				return (this->_alloc.max_size());
+				return (std::min<size_type>(this->_alloc.max_size(), std::numeric_limits<difference_type>::max()));
 			}
 
 			// Return compare :
@@ -523,14 +520,14 @@ namespace ft{
 			}
 
 			// Upper Bound : returns first node whose key is greater than searching key.
-			iterator	upper_bound(const key_type& key)
+			iterator	upper_bound(const _valueType& key)
 			{
 				_nodePtr	_tmp_ = this->_root_;
 				_nodePtr	_res_ = this->_endNode_;
 
 				while(_tmp_ != nullptr)
 				{
-					if (this->_comp(key, _tmp_->_pair.first))
+					if (this->_comp(key, _tmp_->_pair))
 					{
 						_res_ = _tmp_;
 						_tmp_ = _tmp_->_left;
@@ -538,17 +535,17 @@ namespace ft{
 					else
 						_tmp_ = _tmp_->_right;
 				}
-				return iterator(_tmp_);				
+				return iterator(_res_);				
 			}
 			
-			const_iterator	upper_bound(const key_type& key) const
+			const_iterator	upper_bound(const _valueType& key) const
 			{
 				_nodePtr	_tmp_ = this->_root_;
 				_nodePtr	_res_ = this->_endNode_;
 
 				while(_tmp_ != nullptr)
 				{
-					if (this->_comp(key, _tmp_->_pair.first))
+					if (this->_comp(key, _tmp_->_pair))
 					{
 						_res_ = _tmp_;
 						_tmp_ = _tmp_->_left;
@@ -556,19 +553,19 @@ namespace ft{
 					else
 						_tmp_ = _tmp_->_right;
 				}
-				return const_iterator(_tmp_);
+				return (const_iterator(_res_));
 			}
 
 			// Lower bound : similar with upper_bound but for the case of key = searching key lower_b returns key 
 			// whereas upper return the next key (node)
-			iterator	lower_bound(const key_type& key)
+			iterator	lower_bound(const _valueType& key)
 			{
 				_nodePtr	_tmp_ = this->_root_;
 				_nodePtr	_res_ = this->_endNode_;
 
 				while(_tmp_ != nullptr)
 				{
-					if (!this->_comp(_tmp_->_pair.first, key))
+					if (!this->_comp(_tmp_->_pair, key))
 					{
 						_res_ = _tmp_;
 						_tmp_ = _tmp_->_left;
@@ -576,17 +573,17 @@ namespace ft{
 					else
 						_tmp_ = _tmp_->_right;
 				}
-				return (iterator(_tmp_));
+				return (iterator(_res_));
 			}
 
-			const_iterator	lower_bound(const key_type& key) const
+			const_iterator	lower_bound(const _valueType& key) const
 			{
 				_nodePtr	_tmp_ = this->_root_;
 				_nodePtr	_res_ = this->_endNode_;
 				
 				while(_tmp_ != nullptr)
 				{
-					if (!this->_comp(_tmp_->_pair.first, key))
+					if (!this->_comp(_tmp_->_pair, key))
 					{
 						_res_ = _tmp_;
 						_tmp_ = _tmp_->_left;
@@ -594,7 +591,7 @@ namespace ft{
 					else
 						_tmp_ = _tmp_->_right;
 				}
-				return (const_iterator(_tmp_));
+				return (const_iterator(_res_));
 			}
 
 			// Swap :
@@ -617,7 +614,7 @@ namespace ft{
 			}			
 			
 			// Find operation for the tree :
-			_nodePtr	find(const _valueType& _pair)
+			_nodePtr	find(const _valueType& _pair)  const
 			{
 				_nodePtr	_curr = this->_root_;
 
@@ -647,13 +644,15 @@ namespace ft{
 					return ;
 				}
 				// in case of duplicates,
-				if (this->find(_pair) != nullptr)
-					return ;
+				// if (this->find(_pair) != nullptr)
+				// 	return ;
 				this->_endNode_->_left = nullptr;
 				this->_root_->_parent = nullptr;
 				while (_tmp != nullptr)
 				{
 					_newNodeParent = _tmp;
+					if (!this->_comp(_newNode->_pair, _tmp->_pair) && !this->_comp(_tmp->_pair, _newNode->_pair))
+						return ; // in case of duplicates
 					_tmp = (this->_comp(_newNode->_pair, _tmp->_pair) ? _tmp->_left : _tmp->_right);
 					_newNode->_parent = _newNodeParent; // link the parent for the new node 
 				}
@@ -777,9 +776,9 @@ namespace ft{
 				
 
 				_deletingNode_ = this->find(_delKey_);
-				std::cout << "DELETED ----[ "<< _deletingNode_->_pair.first << " ]----\n";
 				if (!this->_root_ || _deletingNode_ == nullptr)
 					return ;
+				std::cout << "DELETED ----[ "<< _deletingNode_->_pair.first << " ]----\n";
 				this->_endNode_->_left = nullptr;
 				this->_root_->_parent = nullptr;
 				_nodePtr	_tmpNode_ = _deletingNode_;
@@ -787,16 +786,13 @@ namespace ft{
 				if (_deletingNode_->_left == nullptr) // case of no children or only one right child.
 				{
 					_replacingNode_ = _deletingNode_->_right;
-					// _tmpNode_ = _replacingNode_;
 					this->_replace_(_deletingNode_, _deletingNode_->_right);
 					this->_alloc.destroy(_deletingNode_);
 					this->_alloc.deallocate(_deletingNode_, 1);
 				}
 				else if (_deletingNode_->_right == nullptr) // only one left child .
 				{
-				// std::cout <<"--> "<< _deletingNode_->_pair.first << std::endl;
 					_replacingNode_ = _deletingNode_->_left;
-					_tmpNode_ = _replacingNode_;
 					this->_replace_(_deletingNode_, _deletingNode_->_left);
 					this->_alloc.destroy(_deletingNode_);
 					this->_alloc.deallocate(_deletingNode_, 1);

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:23:00 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/09 00:45:51 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/10 08:11:13 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,18 @@ namespace ft{
 				friend class map;
 				
 				protected:
-					Compare	_comp;
-					value_compare(Compare _cmp) : _comp(_cmp) { }
+					key_compare	_comp;
+					value_compare(key_compare _cmp) : _comp(_cmp) { }
 				
 				public:
-					bool	operator ()(const value_type& _x, const value_type& _y)
+					bool	operator ()(const value_type& _x, const value_type& _y) const
 					{
 						return (_comp(_x.first, _y.first));
 					}
 			}; // END! class value_compare .
 			
 			typedef	Alloc													allocator_type;
-			typedef _rbTree_<key_type, value_type, value_compare, allocator_type>		_rbTree_;
+			typedef _rbTree_<key_type, value_type, allocator_type, value_compare>		_rbTree_;
 			typedef typename ft::tree_node<value_type>*						_nodePtr_;
 			typedef typename allocator_type::pointer						pointer;
 			typedef typename allocator_type::reference						reference;
@@ -160,7 +160,7 @@ namespace ft{
 			// max size:
 			size_type	max_size() const
 			{
-				return (std::min<size_type>(this->_alloc.max_size(), std::numeric_limits<difference_type>::max()));
+				return (this->_tree_.max_size());
 			}
 
 			// Insert methods:
@@ -244,7 +244,7 @@ namespace ft{
 				_nodePtr_ tmp = this->_tree_.find(ft::make_pair(key, mapped_type()));
 
 				if (tmp != nullptr)
-					return (const_iteraotr(tmp));
+					return (const_iterator(tmp));
 				return (this->end());
 			}
 
@@ -277,23 +277,23 @@ namespace ft{
 			// Upper bound:
 			iterator	upper_bound(const key_type& k)
 			{
-				return (this->_tree_.upper_bound(make_pair(k, mapped_type())));
+				return (this->_tree_.upper_bound(ft::make_pair(k, mapped_type())));
 			}
 
 			const_iterator	upper_bound(const key_type& k) const
 			{
-				return (this->_tree_.upper_bound(make_pair(k, mapped_type())));
+				return (this->_tree_.upper_bound(ft::make_pair(k, mapped_type())));
 			}
 
 			// Lower bound :
 			iterator	lower_bound(const key_type& k)
 			{
-				return (this->_tree_.lower_bound(make_pair(k, mapped_type())));
+				return (this->_tree_.lower_bound(ft::make_pair(k, mapped_type())));
 			}
 
 			const_iterator lower_bound(const key_type& k) const
 			{
-				return (this->_tree_.lower_bound(make_pair(k, mapped_type())));
+				return (this->_tree_.lower_bound(ft::make_pair(k, mapped_type())));
 			}
 
 			// return allocator type:
@@ -302,7 +302,7 @@ namespace ft{
 				return (this->_alloc);
 			}
 			
-			// Equal range : get range of equal elements but since all the key are unique so the size of the range is 1 if the key exists
+			// Equal range : get range of equal elements but since all the keys are unique so the size of the range is 1 if the key exists
 			pair<iterator, iterator> equal_range(const key_type& k)
 			{
 				return (pair<iterator, iterator>(this->lower_bound(k), this->upper_bound(k)));
@@ -320,6 +320,21 @@ namespace ft{
 				if (_found != this->end())
 					return ((*_found).second);
 				return (*((this->insert(make_pair(_key,mapped_type()))).first)).second;
+			}
+
+			void	_shape_()
+			{
+				iterator	first = this->begin();
+				
+				for(;first!=this->end();first++)
+				{
+					std::string test;
+					if (first._get_node_()->_color)
+						test = "black";
+					else
+						test = "red";
+					std::cout << "node = | " << first->first << " | color = | " << test <<" |"<< std::endl;
+				}
 			}
 			
 	};// END MAP!

@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 23:24:08 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/07 21:37:18 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/10 04:12:31 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ namespace ft{
 			typedef Compare													key_compare;
 			typedef T														value_type;
 			typedef	Alloc													allocator_type;
-			typedef _rbTree_<key_type, value_type, key_compare, allocator_type>		_rbTree_;
+			typedef _rbTree_<key_type, value_type, allocator_type, key_compare>		_rbTree_;
 			typedef typename ft::tree_node<value_type>*						_nodePtr_;
 			typedef typename allocator_type::pointer						pointer;
 			typedef typename allocator_type::reference						reference;
@@ -176,21 +176,6 @@ namespace ft{
 			typedef typename _rbTree_::difference_type						difference_type;
 
 			// Class value_compare :
-
-			class value_compare{
-				
-				friend class set;
-				
-				protected:
-					Compare	_comp;
-					value_compare(Compare _cmp) : _comp(_cmp) { }
-				
-				public:
-					bool	operator ()(const value_type& _x, const value_type& _y)
-					{
-						return (_comp(_x.first, _y.first));
-					}
-			}; // END! class value_compare .
 		
 		private:
 			_rbTree_		_tree_;
@@ -199,15 +184,15 @@ namespace ft{
 		
 		public:
 			// Constructors:
-			explicit	set(const key_compare& cmp = value_compare(), const allocator_type& allocator = allocator_type())
-					: _tree_(value_compare(cmp), allocator), _alloc(allocator), _compare(cmp) { }
+			explicit	set(const key_compare& cmp = key_compare(), const allocator_type& allocator = allocator_type())
+					: _tree_(key_compare(cmp), allocator), _alloc(allocator), _compare(cmp) { }
 			template<typename _iter>
-			set(_iter first, _iter last, const key_compare& cmp = value_compare(), const allocator_type& allocator = allocator_type()) :
-			_tree_(value_compare(cmp), allocator), _alloc(allocator), _compare(cmp)
+			set(_iter first, _iter last, const key_compare& cmp = key_compare(), const allocator_type& allocator = allocator_type()) :
+			_tree_(key_compare(cmp), allocator), _alloc(allocator), _compare(cmp)
 			{
 				this->insert(first, last);
 			}
-			set(const set& obj) : _tree_(value_compare(obj._compare), _alloc(obj._alloc)), _compare(obj._compare)
+			set(const set& obj) : _tree_(key_compare(obj._compare), _alloc(obj._alloc)), _compare(obj._compare)
 			{
 				*this = obj;
 			}
@@ -284,7 +269,7 @@ namespace ft{
 			// max size:
 			size_type	max_size() const
 			{
-				return (std::min<size_type>(this->_alloc.max_size(), std::numeric_limits<difference_type>::max()));
+				return (this->_tree_.max_size());
 			}
 
 			// Insert methods:
@@ -343,8 +328,8 @@ namespace ft{
 
 			void	erase(iterator first, iterator last)
 			{
-				for(;first!=last;first++)
-					this->erase(first);
+				while(first!=last)
+					this->erase(first++);
 			}
 
 			// Find methods :
@@ -353,7 +338,7 @@ namespace ft{
 				_nodePtr_ tmp = this->_tree_.find(key);
 
 				if (tmp != nullptr)
-					return (const_iteraotr(tmp));
+					return (const_iterator(tmp));
 				return (this->end());
 			}
 
@@ -368,13 +353,7 @@ namespace ft{
 			{
 				return (this->_compare);
 			}
-
-			// Return the value comparison object .
-			value_compare	value_comp() const
-			{
-				return (value_compare(this->_compare));
-			}
-
+			
 			// Swap :
 			void	swap(set& _set_)
 			{
@@ -399,7 +378,7 @@ namespace ft{
 					else
 						_tmp_ = _tmp_->_right;
 				}
-				return const_iterator(_tmp_);
+				return const_iterator(_res_);
 			}
 
 			// Lower bound :
@@ -418,7 +397,7 @@ namespace ft{
 					else
 						_tmp_ = _tmp_->_right;
 				}
-				return (const_iterator(_tmp_));
+				return (const_iterator(_res_));
 			}
 
 			// return allocator type:
