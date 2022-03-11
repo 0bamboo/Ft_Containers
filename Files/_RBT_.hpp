@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/11 18:40:07 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/11 21:50:28 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "_iter_.hpp"
 # include <iostream>
 # include <iomanip>
+# include <limits>
 
 # define _BLACK_ 1
 # define _RED_   0
@@ -45,7 +46,7 @@ namespace ft{
 	class	tree_iterator
 	{
 		public:
-
+			typedef _pairType										value_type;
 			typedef	_nodetype										iterator_type; //tree_node<_>
 			typedef _pairType*										pointer;
 			typedef _pairType&										reference;
@@ -76,7 +77,7 @@ namespace ft{
 
 			iterator_type	base() const { return (this->_curr); }
 
-			reference	operator *( ) const { return (this->_curr->_pair); }
+			reference	operator *() const { return (this->_curr->_pair); }
 
 			iterator_type	_get_node_() const { return (this->_curr); }
 
@@ -331,7 +332,7 @@ namespace ft{
 			_nodePtr		_root_;
 			_nodePtr		_endNode_;
 			allocator_type	_alloc;
-			_valueCompare	_comp;
+			_valueCompare	_comp_;
 			size_type		_size;
 
 			// Function to create new nodes :
@@ -447,12 +448,12 @@ namespace ft{
 		public:
 
 			// Constructors:
-			_rbTree_(_valueCompare compare, allocator_type allocator): _root_(nullptr), _alloc(allocator), _comp(compare), _size(0)
+			_rbTree_(_valueCompare compare, allocator_type allocator): _root_(nullptr), _alloc(allocator), _comp_(compare), _size(0)
 			{
 				this->_endNode_ = this->_createNewNode_();
 			}
 
-			_rbTree_(const _rbTree_& tree)
+			_rbTree_(const _rbTree_& tree):_alloc(tree._alloc), _comp_(tree.value_comp()), _size(0)
 			{
 				*this = tree;
 			}
@@ -462,7 +463,7 @@ namespace ft{
 				if (this != &tree)
 				{
 					this->clear();
-					this->_comp = tree.value_comp();
+					this->_comp_ = tree.value_comp();
 					this->_alloc = tree._alloc;
 					iterator iter = tree.begin();
 					while (iter != tree.end())
@@ -518,7 +519,7 @@ namespace ft{
 			// Return compare :
 			_valueCompare value_comp() const
 			{
-				return this->_comp;
+				return this->_comp_;
 			}
 
 			// Upper Bound : returns first node whose key is greater than searching key.
@@ -529,7 +530,7 @@ namespace ft{
 
 				while(_tmp_ != nullptr)
 				{
-					if (this->_comp(key, _tmp_->_pair))
+					if (this->_comp_(key, _tmp_->_pair))
 					{
 						_res_ = _tmp_;
 						_tmp_ = _tmp_->_left;
@@ -547,7 +548,7 @@ namespace ft{
 
 				while(_tmp_ != nullptr)
 				{
-					if (this->_comp(key, _tmp_->_pair))
+					if (this->_comp_(key, _tmp_->_pair))
 					{
 						_res_ = _tmp_;
 						_tmp_ = _tmp_->_left;
@@ -567,7 +568,7 @@ namespace ft{
 
 				while(_tmp_ != nullptr)
 				{
-					if (!this->_comp(_tmp_->_pair, key))
+					if (!this->_comp_(_tmp_->_pair, key))
 					{
 						_res_ = _tmp_;
 						_tmp_ = _tmp_->_left;
@@ -585,7 +586,7 @@ namespace ft{
 				
 				while(_tmp_ != nullptr)
 				{
-					if (!this->_comp(_tmp_->_pair, key))
+					if (!this->_comp_(_tmp_->_pair, key))
 					{
 						_res_ = _tmp_;
 						_tmp_ = _tmp_->_left;
@@ -602,7 +603,7 @@ namespace ft{
 				std::swap(this->_endNode_, tree._endNode_);
 				std::swap(this->_root_, tree._root_);
 				std::swap(this->_alloc, tree._alloc);
-				std::swap(this->_comp, tree._comp);
+				std::swap(this->_comp_, tree._comp_);
 				std::swap(this->_size, tree._size);
 			}
 
@@ -622,20 +623,17 @@ namespace ft{
 
 				while (_curr != nullptr)
 				{
-					if (!this->_comp(_pair, _curr->_pair) && !this->_comp(_curr->_pair, _pair))
+					if (!this->_comp_(_pair, _curr->_pair) && !this->_comp_(_curr->_pair, _pair))
 						break ;
-					_curr = this->_comp(_curr->_pair, _pair) ? _curr->_right : _curr->_left;
+					_curr = this->_comp_(_curr->_pair, _pair) ? _curr->_right : _curr->_left;
 				}
 				return (_curr);
 			}
 	
 			// Insertion method :
-			void	_insert_(const _valueType& _pair)
+			void	_insert_(_valueType _pair)
 			{
 				_nodePtr _newNode = _createNewNode_(_pair);
-				_nodePtr _tmp = this->_root_;
-				_nodePtr _newNodeParent = nullptr;
-
 				if (this->_root_ == nullptr)
 				{
 					this->_root_ = _newNode;
@@ -645,20 +643,20 @@ namespace ft{
 					this->_endNode_->_left = this->_root_;
 					return ;
 				}
-				// in case of duplicates,
-				// if (this->find(_pair) != nullptr)
-				// 	return ;
+				
+				_nodePtr _tmp = this->_root_;
+				_nodePtr _newNodeParent = nullptr;
 				this->_endNode_->_left = nullptr;
 				this->_root_->_parent = nullptr;
 				while (_tmp != nullptr)
 				{
 					_newNodeParent = _tmp;
-					if (!this->_comp(_newNode->_pair, _tmp->_pair) && !this->_comp(_tmp->_pair, _newNode->_pair))
+					if (!this->_comp_(_newNode->_pair, _tmp->_pair) && !this->_comp_(_tmp->_pair, _newNode->_pair))
 						return ; // in case of duplicates
-					_tmp = (this->_comp(_newNode->_pair, _tmp->_pair) ? _tmp->_left : _tmp->_right);
+					_tmp = (this->_comp_(_newNode->_pair, _tmp->_pair) ? _tmp->_left : _tmp->_right);
 					_newNode->_parent = _newNodeParent; // link the parent for the new node 
 				}
-				if (this->_comp(_newNode->_pair, _newNodeParent->_pair)) // find where to put the newnode for parent's POV
+				if (this->_comp_(_newNode->_pair, _newNodeParent->_pair)) // find where to put the newnode for parent's POV
 					_newNodeParent->_left = _newNode;
 				else
 					_newNodeParent->_right = _newNode;

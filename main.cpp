@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:13:06 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/11 18:56:09 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/11 21:29:14 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int main()
 
 
 	ta.insert(0);
-	std::cout << *(ta.begin()) << std::endl;
+	// std::cout << *(ta.begin()) << std::endl;
 	// ft::map<int, int>* mm = nullptr;
 	// test.insert(t);
 	// test.insert(ft::pair<int, int>(1, 4));  

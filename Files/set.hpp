@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 23:24:08 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/11 18:38:36 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/11 21:53:06 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ namespace ft{
 			{
 				this->insert(first, last);
 			}
-			set(const set& obj) : _tree_(obj._tree_), _compare(obj._compare)
+			set(const set& obj) : _tree_(key_compare(obj._compare), obj._alloc), _compare(obj._compare)
 			{
 				*this = obj;
 			}

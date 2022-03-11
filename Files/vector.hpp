@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:12:11 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/11 18:47:24 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/11 23:49:57 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -283,9 +283,10 @@ namespace	ft
 				// if (idx < 0)
 				// 	throw std::out_of_range("vector");
 				size_type j = 0;
+				std::cout << "SIZE + ELEMENTS = " << this->_size_ + _nElem << " capacity : " <<this->_capacity_ << std::endl;
 				if (this->_size_ + _nElem >= this->_capacity_)
 				{
-					// std::cout << "IN-1\n";
+					// the problem is here 
 					size_type _newCap_ = (this->_capacity_ * 2 >= this->_size_ + _nElem) ? this->_capacity_ * 2 : this->_size_ + _nElem;
 					pointer	  _newData_ = this->_alloctype_.allocate(_newCap_);
 					size_type _newSize_ = this->_size_ + _nElem;
@@ -311,7 +312,6 @@ namespace	ft
 				}
 				else
 				{
-					std::cout << "IN-2\n";
 					this->_size_ += _nElem;
 					j = this->_size_;
 					while (--j >= 0)
@@ -337,6 +337,7 @@ namespace	ft
 				if (++this->_size_ >= this->_capacity_)
 				{
 					size_type	_newCap_ = (this->_capacity_ * 2 >= this->_size_) ? this->_capacity_ * 2 : this->_size_;
+					// std::cout << "new capacity :============> "  << _newCap_<< std::endl;
 					pointer		_newData_ = this->_alloctype_.allocate(_newCap_);
 					for (size_type i = 0; i < this->_size_; i++)
 					{
@@ -380,7 +381,6 @@ namespace	ft
 				size_type j = 0;
 				if (this->_size_ + _rangeS_ >= this->_capacity_)
 				{
-					std::cout << "here!\n";
 					size_type _newCap_ = (this->_capacity_ * 2 >= this->_size_ + _rangeS_) ? this->_capacity_ * 2 : this->_size_ + _rangeS_;
 					pointer	  _newData_ = this->_alloctype_.allocate(_newCap_);
 					size_type i = 0;
@@ -400,7 +400,6 @@ namespace	ft
 				}
 				else
 				{
-					std::cout << "here2!\n";
 					this->_size_ += _rangeS_;
 					j = this->_size_;
 					while (--j >= 0)

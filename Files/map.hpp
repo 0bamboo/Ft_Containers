@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:23:00 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/11 18:40:57 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/11 21:52:44 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,12 @@ namespace ft{
 			explicit	map(const key_compare& cmp = key_compare(), const allocator_type& allocator = allocator_type())
 					: _tree_(cmp, allocator), _alloc(allocator), _compare(cmp) { }
 			template<typename _iter>
-			map(_iter first, _iter last, const key_compare& cmp = value_compare(), const allocator_type& allocator = allocator_type()) :
-			_tree_(value_compare(cmp), allocator), _alloc(allocator), _compare(cmp)
+			map(_iter first, _iter last, const key_compare& cmp = key_compare(), const allocator_type& allocator = allocator_type()) :
+			_tree_(key_compare(cmp), allocator), _alloc(allocator), _compare(cmp)
 			{
 				this->insert(first, last);
 			}
-			map(const map& obj) : _tree_(obj._tree_), _alloc(obj._alloc), _compare(obj._compare)
+			map(const map& obj) : _tree_(value_compare(obj._compare), obj._alloc), _alloc(obj._alloc), _compare(obj._compare)
 			{
 				*this = obj;
 			}
@@ -192,11 +192,7 @@ namespace ft{
 			void	insert(_iter first, _iter last)
 			{
 				for(; first!=last; first++)
-				{
 					this->insert(*first);
-					std::cout << "inserted! - ";
-				}
-				std::cout << std::endl;
 			}
 
 			// Clear : delete everything.

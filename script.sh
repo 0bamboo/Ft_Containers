@@ -11,6 +11,17 @@ function run () {
 	rm ./ft ./std ft_test std_test
 }
 
+function run11 () {
+	clang++ -std=c++11 -Wall -Wextra -Werror test_test.cpp -D ns=ft -o ft
+	clang++ -std=c++11 -Wall -Wextra -Werror test_test.cpp -D ns=std -o std
+
+	./ft > ft_test
+	./std > std_test
+
+	diff ft_test std_test > diff_file
+	# rm ./ft ./std ft_test std_test
+}
+
 function ttime () {
 	clang++ -std=c++98 -Wall -Wextra -Werror test_test.cpp -D ns=ft -o ft
 	clang++ -std=c++98 -Wall -Wextra -Werror test_test.cpp -D ns=std -o std
@@ -30,6 +41,8 @@ if [ $@ = "run" ]; then
 	run
 elif [ $@ = "leak" ]; then
 	check_leak
+elif [ $@ = "run11" ]; then
+	run11
 elif [ $@ = "ttime" ]; then
 	ttime
 fi
