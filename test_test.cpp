@@ -337,19 +337,19 @@ struct Buffer
 //         _map.erase(_map.begin());
 //     }
 // }
-// void map_access_test() {
-//     ns::map<char, std::string> _map;
+void map_access_test() {
+    ns::map<char, std::string> _map;
 
-//     _map['1'] = "C";
-//     _map['2'] = "C++";
-//     _map['3'] = "RUST";
+    _map['1'] = "C";
+    _map['2'] = "C++";
+    _map['3'] = "RUST";
 
-//     std::cout << "_map['a'] is " << _map['1'] << "\n";
-//     std::cout << "_map['b'] is " << _map['2'] << "\n";
-//     std::cout << "_map['c'] is " << _map['3'] << "\n";
-//     std::cout << "_map['d'] is " << _map['4'] << "\n";
-//     std::cout << "_map now contains " << _map.size() << " elements\n";
-// }
+    std::cout << "_map['a'] is " << _map['1'] << "\n";
+    std::cout << "_map['b'] is " << _map['2'] << "\n";
+    std::cout << "_map['c'] is " << _map['3'] << "\n";
+    std::cout << "_map['d'] is " << _map['4'] << "\n";
+    std::cout << "_map now contains " << _map.size() << " elements\n";
+}
 // void map_modifiers_test() {
 //     ns::map<char, int> _map;
 // 	std::cout << "======================= INSERT BEGIN =======================\n";
@@ -458,12 +458,33 @@ struct Buffer
 // 	std::cout << "upper_bound points to " << ret.second->first << std::endl;
 // 	std::cout << "======================= EQUAL_RANGE END =======================\n\n";
 // }
+
+std::string gen_random(const int len) {
+    static const char alphanum[] =
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    std::string tmp_s;
+    tmp_s.reserve(len);
+
+    for (int i = 0; i < len; ++i) {
+        tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+    }
+    
+    return tmp_s;
+}
+
 void map_time_test() {
-	ns::map<std::string, int> _map_int;
+	ns::map<std::string, std::string> _map_int;
 	// ns::map<std::string, int> _map_swap;
 
-	for (int i = 0; i < 2000; i++)
-		_map_int.insert(ns::pair<std::string, int>(std::to_string(i), i));
+	for (int i = 0; i < 2000000; i++)
+    {
+        std::string str_str = gen_random(110);
+        // std::cout << str << std::endl;
+		_map_int.insert(ns::pair<std::string, std::string>(str_str, str_str));
+        // std::cout << _map_int[str] << std::endl;
+    }
 	// _map_swap.swap(_map_int);
 	// for (int i = 0; i < COUNT; i++)
 	// 	std::cout << _map_swap[std::to_string(i)] << std::endl;
@@ -484,156 +505,156 @@ void map_time_test() {
 //         std::cout << "first: " << it->first << " second: " << it->second << std::endl;
 // }
 
-// // Set tests
-// void set_iterator_test() {
-//     int arr[] = {10, 20, 30, 40, 50, 60, 70, 80};
-//     std::cout << "construct a set with a range of ints\n";
-//     ns::set<int> _set(arr, arr + static_cast<int>(sizeof(arr) / sizeof(int)));
-//     for (ns::set<int>::iterator it = _set.begin(); it != _set.end(); it++)
-//         std::cout << *it << std::endl;
-//     std::cout << "set copy constructor\n";
-//     ns::set<int> _set_copy(_set);
-//     for (ns::set<int>::iterator it = _set_copy.begin(); it != _set_copy.end(); it++)
-//         std::cout << *it << std::endl;
-// 	std::cout << "set range constructor\n";
-// 	ns::set<int> _set_range(_set.begin(), _set.end());
-// 	_set_range.insert(90);
-// 	_set_range.insert(100);
-//     for (ns::set<int>::iterator it = _set_range.begin(); it != _set_range.end(); it++)
-//         std::cout << *it << std::endl;
-//     std::cout << "_set_assign\n";
-//     ns::set<int> _set_assign;
+// Set tests
+void set_iterator_test() {
+    int arr[] = {10, 20, 30, 40, 50, 60, 70, 80};
+    std::cout << "construct a set with a range of ints\n";
+    ns::set<int> _set(arr, arr + static_cast<int>(sizeof(arr) / sizeof(int)));
+    for (ns::set<int>::iterator it = _set.begin(); it != _set.end(); it++)
+        std::cout << *it << std::endl;
+    std::cout << "set copy constructor\n";
+    ns::set<int> _set_copy(_set);
+    for (ns::set<int>::iterator it = _set_copy.begin(); it != _set_copy.end(); it++)
+        std::cout << *it << std::endl;
+	std::cout << "set range constructor\n";
+	ns::set<int> _set_range(_set.begin(), _set.end());
+	_set_range.insert(90);
+	_set_range.insert(100);
+    for (ns::set<int>::iterator it = _set_range.begin(); it != _set_range.end(); it++)
+        std::cout << *it << std::endl;
+    std::cout << "_set_assign\n";
+    ns::set<int> _set_assign;
 
-//     _set_assign = _set_range;
-//     for (ns::set<int>::iterator it = _set_assign.begin(); it != _set_assign.end(); it++)
-//         std::cout << *it << std::endl;
-// }
-// void set_capacity_test() {
-// 	ns::set<char> _set;
+    _set_assign = _set_range;
+    for (ns::set<int>::iterator it = _set_assign.begin(); it != _set_assign.end(); it++)
+        std::cout << *it << std::endl;
+}
+void set_capacity_test() {
+	ns::set<char> _set;
 
-// 	_set.insert('a');
-// 	_set.insert('b');
-// 	_set.insert('c');
-// 	_set.insert('d');
+	_set.insert('a');
+	_set.insert('b');
+	_set.insert('c');
+	_set.insert('d');
 
-// 	std::cout << "size method\n";
-//     std::cout << "_set size is " << _set.size() << "\n";
-// 	std::cout << "max size method\n";
-//     std::cout << "theoretically the set container can hold up to " << _set.max_size() << "\n";
-// 	std::cout << "empty method\n";
-// 	while (!_set.empty()) {
-// 		std::cout << *(_set.begin()) << "\n";
-// 		_set.erase(_set.begin());
-// 	}
-// }
-// void set_modifiers_test() {
-// 	ns::set<int> _set;
-//     std::cout << "======================= INSERT BEGIN =======================\n";
-//     std::cout << "first insert method\n";
-//     _set.insert(100);
-//     _set.insert(200);
-//     ns::pair<ns::set<int>::iterator, bool> ret;
-//     ret = _set.insert(200);
-//     if (ret.second == false) {
-//         std::cout << "this element already existed";
-//         std::cout << " with a value of " << *ret.first << "\n";
-//     }
-//     std::cout << "second insert method\n";
-// 	ns::set<int>::iterator r = _set.begin();
-// 	_set.insert(r, 300);
-// 	_set.insert(r, 400);
-//     _set.insert(r, 500);
-// 	for (ns::set<int>::iterator it = _set.begin(); it != _set.end(); it++)
-// 		std::cout << *it << "\n";
-// 	std::cout << "third insert method\n";
-// 	ns::set<int> _set_range;
+	std::cout << "size method\n";
+    std::cout << "_set size is " << _set.size() << "\n";
+	std::cout << "max size method\n";
+    std::cout << "theoretically the set container can hold up to " << _set.max_size() << "\n";
+	std::cout << "empty method\n";
+	while (!_set.empty()) {
+		std::cout << *(_set.begin()) << "\n";
+		_set.erase(_set.begin());
+	}
+}
+void set_modifiers_test() {
+	ns::set<int> _set;
+    std::cout << "======================= INSERT BEGIN =======================\n";
+    std::cout << "first insert method\n";
+    _set.insert(100);
+    _set.insert(200);
+    ns::pair<ns::set<int>::iterator, bool> ret;
+    ret = _set.insert(200);
+    if (ret.second == false) {
+        std::cout << "this element already existed";
+        std::cout << " with a value of " << *ret.first << "\n";
+    }
+    std::cout << "second insert method\n";
+	ns::set<int>::iterator r = _set.begin();
+	_set.insert(r, 300);
+	_set.insert(r, 400);
+    _set.insert(r, 500);
+	for (ns::set<int>::iterator it = _set.begin(); it != _set.end(); it++)
+		std::cout << *it << "\n";
+	std::cout << "third insert method\n";
+	ns::set<int> _set_range;
 
-// 	_set_range.insert(_set.begin(), _set.end());
-// 	for (ns::set<int>::iterator it = _set.begin(); it != _set.end(); it++)
-// 		std::cout << *it << "\n";
-//     std::cout << "======================= INSERT END =======================\n\n";
-//     std::cout << "======================= ERASE BEGIN =======================\n";
-// 	std::cout << "erasing by iterator\n";
-// 	ns::set<int>::iterator itrm = _set_range.find(300);
-// 	_set_range.erase(itrm);
-// 	std::cout << "erasing by value\n";
-// 	_set_range.erase(400);
-// 	itrm = _set_range.find(200);
-// 	std::cout << "erasing by range\n";
-// 	_set_range.erase(itrm, _set_range.end());
-// 	for (itrm = _set_range.begin(); itrm != _set_range.end(); itrm++)
-// 		std::cout << *itrm << "\n";
-//     std::cout << "======================= ERASE END =======================\n\n";
-//     std::cout << "======================= SWAP BEGIN =======================\n";
-// 	ns::set<char> foo, bar;
-// 	foo.insert('x');
-// 	foo.insert('y');
+	_set_range.insert(_set.begin(), _set.end());
+	for (ns::set<int>::iterator it = _set.begin(); it != _set.end(); it++)
+		std::cout << *it << "\n";
+    std::cout << "======================= INSERT END =======================\n\n";
+    std::cout << "======================= ERASE BEGIN =======================\n";
+	std::cout << "erasing by iterator\n";
+	ns::set<int>::iterator itrm = _set_range.find(300);
+	_set_range.erase(itrm);
+	std::cout << "erasing by value\n";
+	_set_range.erase(400);
+	itrm = _set_range.find(200);
+	std::cout << "erasing by range\n";
+	_set_range.erase(itrm, _set_range.end());
+	for (itrm = _set_range.begin(); itrm != _set_range.end(); itrm++)
+		std::cout << *itrm << "\n";
+    std::cout << "======================= ERASE END =======================\n\n";
+    std::cout << "======================= SWAP BEGIN =======================\n";
+	ns::set<char> foo, bar;
+	foo.insert('x');
+	foo.insert('y');
 
-// 	bar.insert('a');
-// 	bar.insert('b');
-// 	bar.insert('c');
-// 	foo.swap(bar);
-// 	std::cout << "foo contains:\n";
-// 	for (ns::set<char>::iterator it = foo.begin(); it != foo.end(); it++)
-// 		std::cout << *it << "\n";
-// 	std::cout << "bar contains:\n";
-// 	for (ns::set<char>::iterator it = bar.begin(); it != bar.end(); it++)
-// 		std::cout << *it << "\n";
-//     std::cout << "======================= SWAP END =======================\n\n";
-//     std::cout << "======================= CLEAR BEGIN =======================\n";
-// 	_set.clear();
-// 	std::cout << "_map size after clear: " << _set.size() << "\n";
-// 	_set.insert(100);
-// 	_set.insert(125);
-// 	for (ns::set<int>::iterator it = _set.begin(); it != _set.end(); it++)
-// 		std::cout << *it << "\n";
-//     std::cout << "======================= CLEAR END =======================\n\n";
-// }
-// void set_operations_test() {
-// 	ns::set<char> _set;
-// 	ns::set<char>::iterator itf;
+	bar.insert('a');
+	bar.insert('b');
+	bar.insert('c');
+	foo.swap(bar);
+	std::cout << "foo contains:\n";
+	for (ns::set<char>::iterator it = foo.begin(); it != foo.end(); it++)
+		std::cout << *it << "\n";
+	std::cout << "bar contains:\n";
+	for (ns::set<char>::iterator it = bar.begin(); it != bar.end(); it++)
+		std::cout << *it << "\n";
+    std::cout << "======================= SWAP END =======================\n\n";
+    std::cout << "======================= CLEAR BEGIN =======================\n";
+	_set.clear();
+	std::cout << "_map size after clear: " << _set.size() << "\n";
+	_set.insert(100);
+	_set.insert(125);
+	for (ns::set<int>::iterator it = _set.begin(); it != _set.end(); it++)
+		std::cout << *it << "\n";
+    std::cout << "======================= CLEAR END =======================\n\n";
+}
+void set_operations_test() {
+	ns::set<char> _set;
+	ns::set<char>::iterator itf;
 
-// 	_set.insert('a');
-// 	_set.insert('b');
-// 	_set.insert('c');
-// 	_set.insert('d');
-// 	_set.insert('e');
-// 	_set.insert('f');
+	_set.insert('a');
+	_set.insert('b');
+	_set.insert('c');
+	_set.insert('d');
+	_set.insert('e');
+	_set.insert('f');
 
-// 	std::cout << "======================= FIND BEGIN =======================\n";
-// 	itf = _set.find('c');
-// 	if (itf != _set.end())
-// 		_set.erase(itf);
-// 	for (ns::set<char>::iterator it = _set.begin(); it != _set.end(); it++)
-// 		std::cout << *it << std::endl;
-// 	std::cout << "======================= FIND END =======================\n\n";
-// 	std::cout << "======================= COUNT BEGIN =======================\n";
-// 	for (char c = 'a'; c < 'h'; c++) {
-// 		std::cout << c;
-// 		if (_set.count(c) > 0)
-// 			std::cout << " is an element of _set\n";
-// 		else
-// 			std::cout << " is not an element of _set\n";
-// 	}
-// 	std::cout << "======================= COUNT END =======================\n\n";
-// 	std::cout << "======================= LOWER_BOUND BEGIN =======================\n";
-// 	ns::set<char>::iterator lb = _set.lower_bound('b');
-// 	std::cout << "lower bound of 'b' is " << *lb << "\n";
-// 	lb = _set.lower_bound('f');
-// 	std::cout << "lower bound of 'f' is " << *lb << "\n";
-// 	std::cout << "======================= LOWER_BOUND END =======================\n\n";
-// 	std::cout << "======================= UPPER_BOUND BEGIN =======================\n";
-// 	ns::set<char>::iterator ub = _set.upper_bound('b');
-// 	std::cout << "upper bound of 'b' is " << *ub << "\n";
-// 	ub = _set.upper_bound('e');
-// 	std::cout << "upper bound of 'e' is " << *ub << "\n";
-// 	std::cout << "======================= UPPER_BOUND END =======================\n\n";
-// 		std::cout << "======================= EQUAL_RANGE BEGIN =======================\n";
-// 	ns::pair<ns::set<char>::iterator, ns::set<char>::iterator> ret = _set.equal_range('b');
-// 	std::cout << "lower_bound points to " << *ret.first << std::endl;
-// 	std::cout << "upper_bound points to " << *ret.second << std::endl;
-// 	std::cout << "======================= EQUAL_RANGE END =======================\n\n";
-// }
+	std::cout << "======================= FIND BEGIN =======================\n";
+	itf = _set.find('c');
+	if (itf != _set.end())
+		_set.erase(itf);
+	for (ns::set<char>::iterator it = _set.begin(); it != _set.end(); it++)
+		std::cout << *it << std::endl;
+	std::cout << "======================= FIND END =======================\n\n";
+	std::cout << "======================= COUNT BEGIN =======================\n";
+	for (char c = 'a'; c < 'h'; c++) {
+		std::cout << c;
+		if (_set.count(c) > 0)
+			std::cout << " is an element of _set\n";
+		else
+			std::cout << " is not an element of _set\n";
+	}
+	std::cout << "======================= COUNT END =======================\n\n";
+	std::cout << "======================= LOWER_BOUND BEGIN =======================\n";
+	ns::set<char>::iterator lb = _set.lower_bound('b');
+	std::cout << "lower bound of 'b' is " << *lb << "\n";
+	lb = _set.lower_bound('f');
+	std::cout << "lower bound of 'f' is " << *lb << "\n";
+	std::cout << "======================= LOWER_BOUND END =======================\n\n";
+	std::cout << "======================= UPPER_BOUND BEGIN =======================\n";
+	ns::set<char>::iterator ub = _set.upper_bound('b');
+	std::cout << "upper bound of 'b' is " << *ub << "\n";
+	ub = _set.upper_bound('e');
+	std::cout << "upper bound of 'e' is " << *ub << "\n";
+	std::cout << "======================= UPPER_BOUND END =======================\n\n";
+		std::cout << "======================= EQUAL_RANGE BEGIN =======================\n";
+	ns::pair<ns::set<char>::iterator, ns::set<char>::iterator> ret = _set.equal_range('b');
+	std::cout << "lower_bound points to " << *ret.first << std::endl;
+	std::cout << "upper_bound points to " << *ret.second << std::endl;
+	std::cout << "======================= EQUAL_RANGE END =======================\n\n";
+}
 // void set_time_test() {
 // 	ns::set<int> _set_int;
 // 	ns::set<int> _set_swap;
@@ -645,13 +666,13 @@ void map_time_test() {
 // 		std::cout << *it << std::endl;
 // }
 
-// void set_reverse_iterator_test() {
-//     ns::set<int> _set;
-//     for (int i = 0; i < 12; i++)
-//         _set.insert(i);
-//     for (ns::set<int>::reverse_iterator it = _set.rbegin(); it != _set.rend(); it++)
-//         std::cout << *it << std::endl;
-// }
+void set_reverse_iterator_test() {
+    ns::set<int> _set;
+    for (int i = 0; i < 12; i++)
+        _set.insert(i);
+    for (ns::set<int>::reverse_iterator it = _set.rbegin(); it != _set.rend(); it++)
+        std::cout << *it << std::endl;
+}
 
 // void print(int i) {
 //     std::cout << i << std::endl;
@@ -698,18 +719,18 @@ int main() {
     // // Map
     // map_iterator_test();
     // map_capacity_test();
-    // map_access_test();
+    map_access_test();
     // map_modifiers_test();
     // map_operations_test();
     // map_reverse_iterator_test();
-    map_time_test();
+    // map_time_test();
 
     // // Set
-    // set_iterator_test();
+    set_iterator_test();
     // set_capacity_test();
-    // set_modifiers_test();
-    // set_operations_test();
-    // set_reverse_iterator_test();
+    set_modifiers_test();
+    set_operations_test();
+    set_reverse_iterator_test();
     // set_time_test();
 
     // Generic algorithms

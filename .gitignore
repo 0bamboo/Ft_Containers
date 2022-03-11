@@ -1,3 +1,8 @@
 .DS_Store
-.vs_code
+.vscode
 a.out
+ft
+std
+ft_test
+std_test
+diff_file

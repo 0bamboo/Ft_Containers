@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/10 08:55:09 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/11 18:40:07 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 # include "_iter_.hpp"
 # include <iostream>
+# include <iomanip>
 
 # define _BLACK_ 1
 # define _RED_   0
@@ -352,13 +353,13 @@ namespace ft{
 			}
 			
 			// Tree's node min and max :
-			_nodePtr	_treeMinimum_(_nodePtr _node)
+			_nodePtr	_treeMinimum_(_nodePtr _node) const
 			{
 				while (_node->_left != nullptr)
 					_node = _node->_left;
 				return (_node);
 			}
-			_nodePtr	_treeMaximum_(_nodePtr _node)
+			_nodePtr	_treeMaximum_(_nodePtr _node) const
 			{
 				while (_node->_right != nullptr)
 					_node = _node->_right;
@@ -464,9 +465,10 @@ namespace ft{
 					this->_comp = tree.value_comp();
 					this->_alloc = tree._alloc;
 					iterator iter = tree.begin();
-					while (iter != iter.end())
-						this->insert(*iter++);
+					while (iter != tree.end())
+						this->_insert_(*iter++);
 				}
+				return (*this);
 			}
 
 			~_rbTree_()
@@ -754,7 +756,7 @@ namespace ft{
 			}
 
 
-			// Transplant : if deleting node has no or only one child we use this method.
+			// Replace the deleting node to its replacement.
 			void	_replace_(_nodePtr	_deletingNode_, _nodePtr	_replacingNode_)
 			{
 				if (_deletingNode_->_parent == nullptr)
@@ -778,10 +780,10 @@ namespace ft{
 				_deletingNode_ = this->find(_delKey_);
 				if (!this->_root_ || _deletingNode_ == nullptr)
 					return ;
-				std::cout << "DELETED ----[ "<< _deletingNode_->_pair.first << " ]----\n";
+				// std::cout << "DELETED ----[ "<< _deletingNode_->_pair.first << " ]----\n";
+				// Detach the Endnode until we fix the tree.
 				this->_endNode_->_left = nullptr;
 				this->_root_->_parent = nullptr;
-				_nodePtr	_tmpNode_ = _deletingNode_;
 				_delColor_ = _deletingNode_->_color;
 				if (_deletingNode_->_left == nullptr) // case of no children or only one right child.
 				{
@@ -789,34 +791,38 @@ namespace ft{
 					this->_replace_(_deletingNode_, _deletingNode_->_right);
 					this->_alloc.destroy(_deletingNode_);
 					this->_alloc.deallocate(_deletingNode_, 1);
-				}
+					if (_delColor_ == _BLACK_ && _replacingNode_ != nullptr)
+						this->_fixAfterDeletion_(_replacingNode_);
+				}// For case 1 and case 2 we fix if the deleting node is black.
 				else if (_deletingNode_->_right == nullptr) // only one left child .
 				{
 					_replacingNode_ = _deletingNode_->_left;
 					this->_replace_(_deletingNode_, _deletingNode_->_left);
 					this->_alloc.destroy(_deletingNode_);
 					this->_alloc.deallocate(_deletingNode_, 1);
+					if (_delColor_ == _BLACK_ && _replacingNode_ != nullptr)
+						this->_fixAfterDeletion_(_replacingNode_);
 				}
-				else // Case of two children.
+				else // Case of two children. We fix if the replacing node is black.
 				{
-					_tmpNode_ = this->_treeMinimum_(_deletingNode_->_right);
-					_delColor_ = _tmpNode_->_color;
-					_replacingNode_ = _tmpNode_->_right;
-					if (_tmpNode_->_parent != nullptr && _tmpNode_->_parent != _deletingNode_) // In case of the replacing node is not the direct child of the deleting node.parent. 
+					_replacingNode_ = this->_treeMinimum_(_deletingNode_->_right);
+					_delColor_ = _replacingNode_->_color;
+					_nodePtr _reReplacement_ = _replacingNode_->_right;
+					if (_replacingNode_->_parent != nullptr && _replacingNode_->_parent != _deletingNode_) // In case of the replacing node is not the direct child of the deleting node.parent. 
 					{
-						this->_replace_(_tmpNode_, _tmpNode_->_right);
-						_tmpNode_->_right = _deletingNode_->_right;
-						_tmpNode_->_right->_parent = _tmpNode_;
+						this->_replace_(_replacingNode_, _replacingNode_->_right);
+						_replacingNode_->_right = _deletingNode_->_right;
+						_replacingNode_->_right->_parent = _replacingNode_;
 					}
-					this->_replace_(_deletingNode_, _tmpNode_);
-					_tmpNode_->_left = _deletingNode_->_left;
-					_tmpNode_->_left->_parent = _tmpNode_;
-					_tmpNode_->_color = _deletingNode_->_color;
+					this->_replace_(_deletingNode_, _replacingNode_);
+					_replacingNode_->_left = _deletingNode_->_left;
+					_replacingNode_->_left->_parent = _replacingNode_;
+					_replacingNode_->_color = _deletingNode_->_color;
 					this->_alloc.destroy(_deletingNode_);
 					this->_alloc.deallocate(_deletingNode_, 1);
+					if (_delColor_ == _BLACK_ && _reReplacement_ != nullptr)
+						this->_fixAfterDeletion_(_reReplacement_);
 				}
-				if (_delColor_ == _BLACK_ && _replacingNode_ != nullptr)
-					this->_fixAfterDeletion_(_replacingNode_);
 				if (this->_root_ != nullptr)
 				{
 					this->_endNode_->_left = this->_root_;
@@ -830,17 +836,19 @@ namespace ft{
 			{
 				while (_current != this->_root_ && _current->_color == _BLACK_)
 				{
+					// The fixing node is leftChild.
 					if (_current != nullptr && this->_isLeftChild_(_current))
 					{
 						_nodePtr	_sibling_ = _current->_parent->_right;
 						
+						// Case 1: The siblingColor is Red, it doesn't matter the color of its children.
 						if (_sibling_ != nullptr && _sibling_->_color == _RED_)
 						{
 							_sibling_->_color = _BLACK_;
 							_current->_parent->_color = _RED_;
 							this->_leftRotate_(_current->_parent);
 							_sibling_ = _current->_parent->_right;
-						}
+						}// Case 2: The siblingColor and the color of its children is Black.
 						if (_sibling_ != nullptr && _sibling_->_color == _BLACK_
 												&& _sibling_->_left->_color == _BLACK_
 												&& _sibling_->_right->_color == _BLACK_)
@@ -849,31 +857,34 @@ namespace ft{
 							_current = _current->_parent;
 						}
 						else
-						{
+						{	// Case 3: The siblingColor is Black and its rightChild's color is Black leftChild(Red).
 							if (_sibling_->_right->_color == _BLACK_)
 							{
 								_sibling_->_left->_color = _BLACK_;
 								_sibling_->_color = _RED_;
 								this->_rightRotate_(_sibling_);
 							}
+							// Case 4: The siblingColor is Black and its rightChild is Red.
 							_sibling_->_color = _current->_parent->_color;
 							_current->_parent->_color = _BLACK_;
 							_sibling_->_right->_color = _BLACK_;
 							this->_leftRotate_(_current->_parent);
 							_current = this->_root_;
+							// All the violated RBT properties restored.
 						}
 					}
-					else
+					else // Fixing node is rightChild . 
 					{
 						_nodePtr _sibling_ = _current->_parent->_left;
-
+						
+						// Case 5: the siblingColor is Red, same thing with case 1 with small change.
 						if (_sibling_ != nullptr && _sibling_->_color == _RED_)
 						{
 							_sibling_->_color = _BLACK_;
 							_current->_parent->_color = _RED_;
 							this->_rightRotate_(_current->_parent);
 							_sibling_ = _current->_parent->_left;
-						}
+						} // Case 6: Like Case 2.
 						if (_sibling_ != nullptr && _sibling_->_color == _BLACK_
 												&& _sibling_->_right->_color == _BLACK_
 												&& _sibling_->_left->_color == _BLACK_)
@@ -883,24 +894,55 @@ namespace ft{
 						}
 						else
 						{
+							// Case 7: Like case 3, perform leftRot instead of rightRot.
 							if (_sibling_->_left->_color == _BLACK_)
 							{
 								_sibling_->_right->_color = _BLACK_;
 								_sibling_->_color = _RED_;
 								this->_leftRotate_(_sibling_);
 							}
+							// Case 8: Like Case 4, peform rightRot instead of leftRot.
 							_sibling_->_color = _current->_parent->_color;
 							_current->_parent->_color = _BLACK_;
 							_sibling_->_left->_color = _BLACK_;
 							this->_rightRotate_(_current->_parent);
 							_current = this->_root_;
+							// All the violated RBT properties restored.
 						}
 					}
 				}
 				_current->_color = _BLACK_;
 			}
 			
+			void __print_tree(_nodePtr node, int indent)
+			{
+				if (node) 
+				{
+					if (node->_right)
+						__print_tree(node->_right, indent + 4);
+					if (indent)
+						std::cout << std::setw(indent) << ' ';
+					if (node->_right) std::cout << " /\n" << std::setw(indent) << ' ';
+					{
+						std::string str = (node->_color) ? "BLACK" : "RED";
+						std::cout << node->_pair.first << "|" << str << std::endl;
+					}
+					if (node->_pair.first)
+					{
+						std::cout << std::setw(indent) << ' ' << " \\\n";
+						__print_tree(node->_left, indent + 4);
+					}
+				}
+			}
+			
+			void __print_tree()
+			{
+				if (this->_root_ == nullptr)
+					return ;
+				__print_tree(this->_root_, 0);
+			}
 	}; // END RED BLACK TREE !!
+
 	
 }; // END FT NAMESPACE
 

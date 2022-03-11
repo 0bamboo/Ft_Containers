@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:13:06 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/10 08:20:16 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/11 18:56:09 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,24 +27,25 @@ int main()
 	ft::map<int, int> test;
 	ft::set<int> ta;
 
+
+
 	ta.insert(0);
 	std::cout << *(ta.begin()) << std::endl;
 	// ft::map<int, int>* mm = nullptr;
 	// test.insert(t);
 	// test.insert(ft::pair<int, int>(1, 4));  
 	test.insert(ft::pair<int, int>(12, 4));
-	test.insert(ft::pair<int, int>(0, 4));
+	test.insert(ft::pair<int, int>(25, 4));
 	test.insert(ft::pair<int, int>(2, 4));
 	test.insert(ft::pair<int, int>(112, 4));
 	test.insert(ft::pair<int, int>(212, 4));
-	test.insert(ft::pair<int, int>(22, 4));
-	test.insert(ft::pair<int, int>(201, 4));
-	test.insert(ft::pair<int, int>(111, 4));
-	test.insert(ft::pair<int, int>(31, 4));
+	test.insert(ft::pair<int, int>(2, 4));
+	test.insert(ft::pair<int, int>(21, 4));
+	test.insert(ft::pair<int, int>(1811, 4));
+	test.insert(ft::pair<int, int>(3251, 4));
 	test.insert(ft::pair<int, int>(61, 4));
-	test.insert(ft::pair<int, int>(741, 4));
-	test.insert(ft::pair<int, int>(81, 4));
-	test.insert(ft::pair<int, int>(81, 4));
+	// test.insert(ft::pair<int, int>(741, 4));
+	// test.insert(ft::pair<int, int>(81, 4));
 	
 	// for (int i = -1431; i < 500; i++)
 	// 	test.insert(ft::pair<int, int>(i, i%2));
@@ -52,6 +53,7 @@ int main()
 	// ft::cout << it->first <<(*it).second<< ft::endl;
 
 	
+	ft::map<int, int> tata(test);
 	ft::map<int, int>::iterator lower_ = test.lower_bound(-999);
 	ft::map<int, int>::iterator upper_ = test.upper_bound(-999);
 	std::cout << "lower -----|" << (*lower_).first << "|upper --------|" << (*upper_).first << std::endl;
@@ -71,18 +73,7 @@ int main()
 	// test.insert(ft::make_pair(-243, 2));
 
 	test._shape_();
-	test.erase(212);
-	test.erase(0);
-	test.erase(test.begin(), test.end());
-	test.insert(ft::make_pair(2,3));
-	test.insert(ft::make_pair(1,3));
-	test.insert(ft::make_pair(9,3));
-	test.insert(ft::make_pair(92,3));
-	// test.insert(ft::make_pair(932,3));
-	test.erase(92);
-	test.erase(9);
-	test.insert(ft::make_pair(98, 8));
-	test._shape_();
+
 
 	std::cout << "empty = "  << test.empty() << std::endl;
 	std::cout << "count = "  << test.count(509) << std::endl;
@@ -91,7 +82,16 @@ int main()
 	// i++;
 	// test.erase(1);
 	// i++;
-	// test.erase(2);
+	test.erase(22);
+	// test.erase(31);
+	// test.erase(111);
+	// test.erase(212);
+	// test.erase(61);
+	// test.erase(201);
+	test.erase(2);
+	test.insert(ft::pair<int, int>(14, 4));
+	test.erase(21);
+	test._shape_();
 	// test.erase(i, endd);
 	// ft::map<int, int> another_test;
 	// test.erase(i, endd);

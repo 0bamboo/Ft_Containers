@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 23:24:08 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/10 04:12:31 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/11 18:38:36 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,133 +23,133 @@
 namespace ft{
 
 	// set iterator:
-	template<typename _pairType>
-	class	S_tree_iterator
-	{
-		public:
+	// template<typename _pairType>
+	// class	S_tree_iterator
+	// {
+	// 	public:
 			
-			typedef	_pairType										iterator_type;
-			typedef _pairType*										pointer;
-			typedef _pairType&										reference;
-			typedef std::bidirectional_iterator_tag					iterator_category;
-			typedef std::ptrdiff_t									difference_type;
-			typedef S_tree_iterator<_pairType>						_self;
-			typedef	typename tree_node<_pairType>::_nodePtr			_node;
+	// 		typedef	_pairType										iterator_type;
+	// 		typedef _pairType*										pointer;
+	// 		typedef _pairType&										reference;
+	// 		typedef std::bidirectional_iterator_tag					iterator_category;
+	// 		typedef std::ptrdiff_t									difference_type;
+	// 		typedef S_tree_iterator<_pairType>						_self;
+	// 		typedef	typename tree_node<_pairType>::_nodePtr			_node;
 		
-		private:
-			_node	_curr;
+	// 	private:
+	// 		_node	_curr;
 			
-		public:
+	// 	public:
 			
-			S_tree_iterator() : _curr() { }
+	// 		S_tree_iterator() : _curr() { }
 
-			S_tree_iterator(iterator_type iter) : _curr(iter) { }
+	// 		S_tree_iterator(iterator_type iter) : _curr(iter) { }
 
-			template<typename T>
-			S_tree_iterator(const S_tree_iterator<T>& iter) : _curr(iter.base()) { }
+	// 		template<typename T>
+	// 		S_tree_iterator(const S_tree_iterator<T>& iter) : _curr(iter.base()) { }
 			
-			template<typename T>
-			S_tree_iterator&	operator = (const S_tree_iterator<T>& iter)
-			{
-				this->_curr = iter.base();
-				return (*this);
-			}
+	// 		template<typename T>
+	// 		S_tree_iterator&	operator = (const S_tree_iterator<T>& iter)
+	// 		{
+	// 			this->_curr = iter.base();
+	// 			return (*this);
+	// 		}
 			
-			~S_tree_iterator() { }
+	// 		~S_tree_iterator() { }
 
-			iterator_type	base() const { return (this->_curr); }
+	// 		iterator_type	base() const { return (this->_curr); }
 
-			reference	operator *( ) const { return (this->_curr->_pair.first); }
+	// 		reference	operator *( ) const { return (this->_curr->_pair.first); }
 
-			_node	_get_node_() const { return (this->_curr); }
+	// 		_node	_get_node_() const { return (this->_curr); }
 
-			pointer		operator ->() const { return (&(operator *())); }
+	// 		pointer		operator ->() const { return (&(operator *())); }
 
-			// Pre increment :
-			_self	operator++() 
-			{
-				this->_curr = next(this->_curr);
-				return (*this);
-			}
+	// 		// Pre increment :
+	// 		_self	operator++() 
+	// 		{
+	// 			this->_curr = next(this->_curr);
+	// 			return (*this);
+	// 		}
 
-			// Post increment :
-			_self	operator++(int)
-			{
-				S_tree_iterator	_tmp(*this);
+	// 		// Post increment :
+	// 		_self	operator++(int)
+	// 		{
+	// 			S_tree_iterator	_tmp(*this);
 
-				this->_curr = next(this->_curr);
-				return (_tmp);
-			}
+	// 			this->_curr = next(this->_curr);
+	// 			return (_tmp);
+	// 		}
 
-			_self	operator--()
-			{
-				this->_curr = prev(this->_curr);
-				return (*this);
-			}
+	// 		_self	operator--()
+	// 		{
+	// 			this->_curr = prev(this->_curr);
+	// 			return (*this);
+	// 		}
 
-			_self	operator--(int)
-			{
-				S_tree_iterator	_tmp(*this);
+	// 		_self	operator--(int)
+	// 		{
+	// 			S_tree_iterator	_tmp(*this);
 
-				this->_curr = prev(this->_curr);
-				return (_tmp);
-			}
+	// 			this->_curr = prev(this->_curr);
+	// 			return (_tmp);
+	// 		}
 
-			template<typename It>
-			bool	operator == (const S_tree_iterator<It>& cmp)
-			{
-				return (this->_curr == cmp.base());
-			}
+	// 		template<typename It>
+	// 		bool	operator == (const S_tree_iterator<It>& cmp)
+	// 		{
+	// 			return (this->_curr == cmp.base());
+	// 		}
 
-			template<typename It>
-			bool	operator != (const S_tree_iterator<It>& cmp)
-			{
-				return (this->_curr != cmp.base());
-			}
+	// 		template<typename It>
+	// 		bool	operator != (const S_tree_iterator<It>& cmp)
+	// 		{
+	// 			return (this->_curr != cmp.base());
+	// 		}
 
-			private:
+	// 		private:
 
-				_node	prev(_node _currNode)
-				{
-					if (_currNode->_left != nullptr)
-					{
-						while (_currNode->_right != nullptr)
-							_currNode = _currNode->_right;
-						return (_currNode);
-					}
-					else
-					{
-						_node _tmp = _currNode->_parent;
-						while (_tmp != nullptr && _currNode == _tmp->_left)
-						{
-							_currNode = _tmp;
-							_tmp = _tmp->_parent;
-						}
-						return (_tmp);
-					}
-				}
+	// 			_node	prev(_node _currNode)
+	// 			{
+	// 				if (_currNode->_left != nullptr)
+	// 				{
+	// 					while (_currNode->_right != nullptr)
+	// 						_currNode = _currNode->_right;
+	// 					return (_currNode);
+	// 				}
+	// 				else
+	// 				{
+	// 					_node _tmp = _currNode->_parent;
+	// 					while (_tmp != nullptr && _currNode == _tmp->_left)
+	// 					{
+	// 						_currNode = _tmp;
+	// 						_tmp = _tmp->_parent;
+	// 					}
+	// 					return (_tmp);
+	// 				}
+	// 			}
 
-				_node	next(_node _currNode)
-				{
-					if (_currNode->_right != nullptr)
-					{
-						while (_currNode->_left != nullptr)
-							_currNode = _currNode->_left;
-						return (_currNode);
-					}
-					else
-					{
-						_node	_tmp = _currNode->_parent;
-						while (_tmp != nullptr && _currNode == _tmp->_right)
-						{
-							_currNode = _tmp;
-							_tmp = _tmp->_parent;
-						}
-						return (_tmp);
-					}
-				}
+	// 			_node	next(_node _currNode)
+	// 			{
+	// 				if (_currNode->_right != nullptr)
+	// 				{
+	// 					while (_currNode->_left != nullptr)
+	// 						_currNode = _currNode->_left;
+	// 					return (_currNode);
+	// 				}
+	// 				else
+	// 				{
+	// 					_node	_tmp = _currNode->_parent;
+	// 					while (_tmp != nullptr && _currNode == _tmp->_right)
+	// 					{
+	// 						_currNode = _tmp;
+	// 						_tmp = _tmp->_parent;
+	// 					}
+	// 					return (_tmp);
+	// 				}
+	// 			}
 			
-	}; // END! TREE ITERATOR .
+	// }; // END! TREE ITERATOR .
 	
 	template< typename T,
 		typename Compare = std::less<T>,
@@ -192,7 +192,7 @@ namespace ft{
 			{
 				this->insert(first, last);
 			}
-			set(const set& obj) : _tree_(key_compare(obj._compare), _alloc(obj._alloc)), _compare(obj._compare)
+			set(const set& obj) : _tree_(obj._tree_), _compare(obj._compare)
 			{
 				*this = obj;
 			}
@@ -365,39 +365,13 @@ namespace ft{
 			// Upper bound:
 			const_iterator	upper_bound(const key_type& key) const
 			{
-				_nodePtr_	_tmp_ = this->_root_;
-				_nodePtr_	_res_ = this->_endNode_;
-
-				while(_tmp_ != nullptr)
-				{
-					if (this->_comp(key, _tmp_->_pair))
-					{
-						_res_ = _tmp_;
-						_tmp_ = _tmp_->_left;
-					}
-					else
-						_tmp_ = _tmp_->_right;
-				}
-				return const_iterator(_res_);
+				return (this->_tree_.upper_bound(key));
 			}
 
 			// Lower bound :
 			const_iterator	lower_bound(const key_type& key) const
 			{
-				_nodePtr_	_tmp_ = this->_root_;
-				_nodePtr_	_res_ = this->_endNode_;
-				
-				while(_tmp_ != nullptr)
-				{
-					if (!this->_comp(_tmp_->_pair, key))
-					{
-						_res_ = _tmp_;
-						_tmp_ = _tmp_->_left;
-					}
-					else
-						_tmp_ = _tmp_->_right;
-				}
-				return (const_iterator(_res_));
+				return (this->_tree_.lower_bound(key));
 			}
 
 			// return allocator type:

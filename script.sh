@@ -6,9 +6,9 @@ function run () {
 
 	./ft > ft_test
 	./std > std_test
-	rm ./ft ./std
 
-	diff ft_test std_test
+	diff ft_test std_test > diff_file
+	rm ./ft ./std ft_test std_test
 }
 
 function ttime () {
@@ -16,9 +16,9 @@ function ttime () {
 	clang++ -std=c++98 -Wall -Wextra -Werror test_test.cpp -D ns=std -o std
 
 	time ./ft ; time ./std
-	# rm ./ft ./std
+	rm ./ft ./std
 
-	# diff ft_test std_test
+	diff ft_test std_test
 }
 
 function check_leak() {

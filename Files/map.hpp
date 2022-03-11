@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:23:00 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/10 08:11:13 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/11 18:40:57 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ namespace ft{
 			{
 				this->insert(first, last);
 			}
-			map(const map& obj) : _tree_(value_compare(obj._compare), _alloc(obj._alloc)), _compare(obj._compare)
+			map(const map& obj) : _tree_(obj._tree_), _alloc(obj._alloc), _compare(obj._compare)
 			{
 				*this = obj;
 			}
@@ -319,22 +319,15 @@ namespace ft{
 				iterator	_found = this->find(_key);
 				if (_found != this->end())
 					return ((*_found).second);
-				return (*((this->insert(make_pair(_key,mapped_type()))).first)).second;
+				return (*((this->insert(ft::make_pair(_key,mapped_type()))).first)).second;
 			}
 
+			// PRINT THE SHAPE OF THE TREE :
 			void	_shape_()
 			{
-				iterator	first = this->begin();
-				
-				for(;first!=this->end();first++)
-				{
-					std::string test;
-					if (first._get_node_()->_color)
-						test = "black";
-					else
-						test = "red";
-					std::cout << "node = | " << first->first << " | color = | " << test <<" |"<< std::endl;
-				}
+				std::cout << " --------------------------------------------------------------- \n";
+				this->_tree_.__print_tree();
+				std::cout << " --------------------------------------------------------------- \n";
 			}
 			
 	};// END MAP!
