@@ -179,8 +179,11 @@ void vector_modifiers_second_test() {
     std::cout << "--------------------------\n";
     it = vector_int.insert(vector_int.end(), 100);
     std::cout << "--------------------------\n";
+
+    std::cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     std::cout <<"last element : "<< *it << std::endl;
     std::cout << "end = " << *vector_int.end() << std::endl;
+    std::cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
     // int i = 0;
     // for (ns::vector<int>::iterator b = vector_int.begin(); b != vector_int.end(); b++, i++)
     // {
@@ -712,36 +715,36 @@ void generic_algorithms_test() {
 
 int main() {
     // Vector
-    // vector_iterator_test();
-    // vector_capacity_test();
-    // vector_modifiers_test();
+    vector_iterator_test();
+    vector_capacity_test();
+    vector_modifiers_test();
     vector_modifiers_second_test();
-    // vector_random_test();
-    // vector_access_test();
-    // vector_test_operations();
-    // vector_reverse_iterator_test();
+    vector_random_test();
+    vector_access_test();
+    vector_test_operations();
+    vector_reverse_iterator_test();
     // vector_time_test();
 
     // Stack
-    // stack_test();
+    stack_test();
 
     // // Map
-    // map_iterator_test();
-    // map_capacity_test();
-    // map_access_test();
-    // map_modifiers_test();
-    // map_operations_test();
-    // map_reverse_iterator_test();
+    map_iterator_test();
+    map_capacity_test();
+    map_access_test();
+    map_modifiers_test();
+    map_operations_test();
+    map_reverse_iterator_test();
     // map_time_test();
 
     // // Set
-    // set_iterator_test();
-    // set_capacity_test();
-    // set_modifiers_test();
-    // set_operations_test();
-    // set_reverse_iterator_test();
+    set_iterator_test();
+    set_capacity_test();
+    set_modifiers_test();
+    set_operations_test();
+    set_reverse_iterator_test();
     // set_time_test();
 
     // Generic algorithms
-    // generic_algorithms_test();
+    generic_algorithms_test();
 }

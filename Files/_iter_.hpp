@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/30 13:54:05 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/01/19 16:36:25 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/12 18:41:05 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 namespace	ft
 {
 	// The base class of iterator:
-	template <class Category, class T, class Distance = std::ptrdiff_t,
-          class Pointer = T*, class Reference = T&>
+	template <typename Category, typename T, typename Distance = std::ptrdiff_t,
+          typename Pointer = T*, typename Reference = T&>
 	class iterator{
 		
 		public:

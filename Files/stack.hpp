@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/13 20:24:07 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/11 22:06:40 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/12 13:53:02 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ namespace ft
 			typedef Container	container_type;
 			typedef size_t		size_type;
 
-		public:
+		protected:
 			container_type c;
 
 		public:

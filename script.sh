@@ -8,7 +8,7 @@ function run () {
 	./std > std_test
 
 	diff ft_test std_test > diff_file
-	rm ./ft ./std ft_test std_test
+	# rm ./ft ./std ft_test std_test
 }
 
 function run11 () {

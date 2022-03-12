@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 23:24:08 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/11 21:53:06 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/12 14:40:27 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,7 +269,7 @@ namespace ft{
 			// max size:
 			size_type	max_size() const
 			{
-				return (this->_tree_.max_size());
+				return (std::numeric_limits<size_type>::max() / sizeof(_rbTree_));
 			}
 
 			// Insert methods:

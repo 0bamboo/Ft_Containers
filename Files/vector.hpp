@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/26 16:12:11 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/11 23:49:57 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/12 19:31:38 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ namespace	ft
 
 		public:
 			// Constructors
+			// We use explicit keyword to prevent the implicit conversion of the compiler, means: 
+			// that the compiler can use constructors callable with a single parameter to convert from one type,
+			// to another in order to get the right type for a parameter
 			explicit vector(const allocator_type& alloc = allocator_type()) : 
 			_size_(0), _capacity_(0),_alloctype_(alloc), _data_(nullptr) { } // default constructor
 			
@@ -57,9 +60,11 @@ namespace	ft
 				this->assign(n, val);
 			} // fill constructor
 			
-			vector(const vector& obj)
+			vector(const vector& obj):_size_(0), _capacity_(obj._size_), _alloctype_(obj.get_allocator())
 			{
-				*this = obj;
+				this->_data_ = this->_alloctype_.allocate(this->_capacity_);
+				for (; this->_size_ < this->_capacity_;this->_size_++)
+					this->_alloctype_.construct(&this->_data_[this->_size_], obj._data_[this->_size_]);
 			} // Copy constructor
 			
 			template<typename _inputIter>
@@ -74,17 +79,17 @@ namespace	ft
 			{
 				if (this != &obj)
 				{
-					if (this->_size_)
+					vector	tmp(obj);
+					if (this->_capacity_ > obj._capacity_)
 					{
-						this->clear();
-						this->_alloctype_.deallocate(this->_data_, this->_capacity_);
+						this->_alloctype_.deallocate(this->_data_, _size_);
+						this->_data_ = this->_alloctype_.allocate(this->_capacity_);
+						this->_size_ = obj._size_;
+						for (size_type i = 0; i < this->_size_; i++)
+							this->_alloctype_.construct(&this->_data_[i], obj._data_[i]);
 					}
-					this->_size_ = obj.size();
-					this->_capacity_ = obj.capacity();
-					this->_alloctype_ = obj.get_allocator();
-					this->_data_ = this->_alloctype_.allocate(this->_capacity_);
-					for (size_type i = 0; i < this->_size_; i++)
-						this->_alloctype_.construct(&this->_data_[i], obj._data_[i]);
+					else
+						this->swap(tmp);
 				}
 				return (*this);
 			}
@@ -92,8 +97,8 @@ namespace	ft
 			~vector()
 			{
 				this->clear();
-				this->_alloctype_.deallocate(this->_data_, this->_capacity_);
-				this->_capacity_ = 0;
+				if (this->_data_)
+					this->_alloctype_.deallocate(this->_data_, this->_capacity_);
 			}
 			
 
@@ -125,9 +130,7 @@ namespace	ft
 				if (n > this->_capacity_)
 				{
 					size_type	_newCap_ = (this->_capacity_ * 2 >= n) ? this->_capacity_ * 2 : n;
-					// std::cout << "In -size- " << this->_size_ << " -capacity- " << this->_capacity_ << "-new Cap-"<< _newCap_<< std::endl; 
 					pointer		_newData_ = this->_alloctype_.allocate(_newCap_);
-					// std::cout << "Here " << std::endl;
 					for (size_type i = 0; i < this->_size_; i++)
 						this->_alloctype_.construct(&_newData_[i], this->_data_[i]);
 					if (this->_size_)
@@ -216,13 +219,10 @@ namespace	ft
 			typename enable_if<!is_integral<_inputIter>::value, bool>::type = true)
 			{
 				difference_type	_length_ = _last - _first;
-				// std::cout <<_length_<< "im here \n";
-				if (_length_ < 0)
-					return ;// throw exception ?
+				// if (_length_ < 0)
+				// 	return ;
 				if ((size_type)_length_ >= this->_capacity_)
 				{
-					// u could add another condition here (== capacity)
-					// std::cout << "im in \n";
 					size_type	_oldC_ = this->_capacity_;
 					this->_capacity_ = this->_size_ = _length_;
 					pointer		_newData_ = this->_alloctype_.allocate(this->_capacity_);
@@ -249,15 +249,19 @@ namespace	ft
 			// Add element at the end :
 			void	push_back(const value_type& val)
 			{
-				this->reserve(this->_size_ + 1);
+				if (this->_size_ + 1 >= this->_capacity_)
+				{
+					size_type _newCap_ = this->_capacity_ == 0 ? 1 : this->_capacity_ * 2;
+					pointer	_newData_ = this->_alloctype_.allocate(_newCap_);
+
+					for (size_type i = 0; i < this->_size_;i++)
+						this->_alloctype_.construct(&_newData_[i], this->_data_[i]);
+					if (this->_size_ + 1)
+						this->_alloctype_.deallocate(this->_data_, this->_capacity_);
+					this->_capacity_ = _newCap_;
+					this->_data_ = _newData_;
+				}
 				this->_alloctype_.construct(&this->_data_[this->_size_++], val);
-				// std::cout << "Im out\n";
-				// std::cout << "{ ";
-				// for (size_type i = 0; i < this->_size_; i++)
-				// {
-				// 	std::cout << this->_data_[i] << " - ";
-				// }
-				// std::cout << " } - size = "<< this->_size_ << "\n";
 			}
 
 			// Delete last element :
@@ -280,20 +284,16 @@ namespace	ft
 			void	insert(iterator _pos, size_type _nElem, const value_type& value)
 			{
 				difference_type idx = _pos - this->begin();
-				// if (idx < 0)
-				// 	throw std::out_of_range("vector");
 				size_type j = 0;
-				std::cout << "SIZE + ELEMENTS = " << this->_size_ + _nElem << " capacity : " <<this->_capacity_ << std::endl;
+				
 				if (this->_size_ + _nElem >= this->_capacity_)
 				{
-					// the problem is here 
 					size_type _newCap_ = (this->_capacity_ * 2 >= this->_size_ + _nElem) ? this->_capacity_ * 2 : this->_size_ + _nElem;
 					pointer	  _newData_ = this->_alloctype_.allocate(_newCap_);
 					size_type _newSize_ = this->_size_ + _nElem;
 					size_type i = 0;
 					while (i < this->_size_)
 					{
-						// 1 2 3 4 === 7 7 7 7 idx=1== > 1 7 7 7 7 3 4
 						if (i == (size_type)idx && _nElem)
 						{
 							this->_alloctype_.construct(&_newData_[j++], value);
@@ -301,8 +301,6 @@ namespace	ft
 						}
 						else
 							this->_alloctype_.construct(&_newData_[j++], this->_data_[i++]);
-						// if (_nElem == 0)
-						// 	break ;
 					}
 					if (this->_size_)
 						this->_alloctype_.deallocate(this->_data_, this->_capacity_);
@@ -337,7 +335,6 @@ namespace	ft
 				if (++this->_size_ >= this->_capacity_)
 				{
 					size_type	_newCap_ = (this->_capacity_ * 2 >= this->_size_) ? this->_capacity_ * 2 : this->_size_;
-					// std::cout << "new capacity :============> "  << _newCap_<< std::endl;
 					pointer		_newData_ = this->_alloctype_.allocate(_newCap_);
 					for (size_type i = 0; i < this->_size_; i++)
 					{
@@ -356,7 +353,6 @@ namespace	ft
 					j = this->_size_;
 					while (--j >= 0)
 					{
-						// 1 2 | new element = 99 new_size = 3 and j = 3 - j = 2 | L1==> 1 2 2 | L2==> 1 1 2
 						if (j == (size_type)idx)
 						{
 							this->_alloctype_.construct(&this->_data_[j], value);
@@ -452,9 +448,8 @@ namespace	ft
 			{
 				difference_type idx = _first - this->begin();
 				size_type _deleteSize_ = _last - _first;
-				// if (_deleteSize_)
-				// 	throw std::out_of_range("vector");
 				size_type i = 0, j = 0;
+				
 				while (i < this->_size_)
 				{
 					if ((size_type)idx == i)
