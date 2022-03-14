@@ -1,8 +1,8 @@
 #!/bin/bash
 
 function run () {
-	clang++ -std=c++98 -Wall -Wextra -Werror test_test.cpp -D ns=ft -o ft
-	clang++ -std=c++98 -Wall -Wextra -Werror test_test.cpp -D ns=std -o std
+	clang++ -std=c++98 -Wall -Wextra -Werror _main_.cpp -D ns=ft -o ft
+	clang++ -std=c++98 -Wall -Wextra -Werror _main_.cpp -D ns=std -o std
 
 	./ft > ft_test
 	./std > std_test
@@ -12,8 +12,8 @@ function run () {
 }
 
 function run11 () {
-	clang++ -std=c++11 -Wall -Wextra -Werror test_test.cpp -D ns=ft -o ft
-	clang++ -std=c++11 -Wall -Wextra -Werror test_test.cpp -D ns=std -o std
+	clang++ -std=c++11 -Wall -Wextra -Werror _main_.cpp -D ns=ft -o ft
+	clang++ -std=c++11 -Wall -Wextra -Werror _main_.cpp -D ns=std -o std
 
 	./ft > ft_test
 	./std > std_test
@@ -23,8 +23,8 @@ function run11 () {
 }
 
 function ttime () {
-	clang++ -std=c++98 -Wall -Wextra -Werror test_test.cpp -D ns=ft -o ft
-	clang++ -std=c++98 -Wall -Wextra -Werror test_test.cpp -D ns=std -o std
+	clang++ -std=c++98 -Wall -Wextra -Werror _main_.cpp -D ns=ft -o ft
+	clang++ -std=c++98 -Wall -Wextra -Werror _main_.cpp -D ns=std -o std
 
 	time ./ft ; time ./std
 	rm ./ft ./std
@@ -32,15 +32,9 @@ function ttime () {
 	diff ft_test std_test
 }
 
-function check_leak() {
-	clang++ -std=c++98 -Wall -Wextra -Werror test_test.cpp -D ns=ft -o ft
-	valgrind --leak-check=full -s ./ft
-}
 
 if [ $@ = "run" ]; then
 	run
-elif [ $@ = "leak" ]; then
-	check_leak
 elif [ $@ = "run11" ]; then
 	run11
 elif [ $@ = "ttime" ]; then
