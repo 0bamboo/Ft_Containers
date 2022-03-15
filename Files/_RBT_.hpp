@@ -6,7 +6,7 @@
 /*   By: abdait-m <abdait-m@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/19 16:01:47 by abdait-m          #+#    #+#             */
-/*   Updated: 2022/03/11 21:50:28 by abdait-m         ###   ########.fr       */
+/*   Updated: 2022/03/12 00:09:46 by abdait-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -675,7 +675,6 @@ namespace ft{
 				{
 					if (_isLeftChild_(_fixingNode->_parent))
 					{
-
 						_nodePtr	_parentSibling = _fixingNode->_parent->_parent->_right;
 						if (_parentSibling != nullptr && _parentSibling->_color == _RED_)
 						{
@@ -714,7 +713,6 @@ namespace ft{
 					}
 					else
 					{
-						// std::cout << "------------------else\n";
 						_nodePtr	_parentSibling = _fixingNode->_parent->_parent->_left;
 						if (_parentSibling != nullptr && _parentSibling->_color == _RED_)
 						{
