@@ -34,8 +34,8 @@ If you want to test the containers, just run the script with run arg :
 ```
 
 ## Resources :
--[RBT](https://www.codeproject.com/Articles/5301424/Build-the-Forest-in-Python-Series-Red-Black-Tree) <br>
--[Iterators](https://www.geeksforgeeks.org/iterators-c-stl/) <br>
--[STL Containers](https://www.cplusplus.com/reference/stl/) <br>
+- [RBT](https://www.codeproject.com/Articles/5301424/Build-the-Forest-in-Python-Series-Red-Black-Tree) <br>
+- [Iterators](https://www.geeksforgeeks.org/iterators-c-stl/) <br>
+- [STL Containers](https://www.cplusplus.com/reference/stl/) <br>
 
 <br>
