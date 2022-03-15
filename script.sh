@@ -11,17 +11,6 @@ function run () {
 	# rm ./ft ./std ft_test std_test
 }
 
-function run11 () {
-	clang++ -std=c++11 -Wall -Wextra -Werror _main_.cpp -D ns=ft -o ft
-	clang++ -std=c++11 -Wall -Wextra -Werror _main_.cpp -D ns=std -o std
-
-	./ft > ft_test
-	./std > std_test
-
-	diff ft_test std_test > diff_file
-	# rm ./ft ./std ft_test std_test
-}
-
 function ttime () {
 	clang++ -std=c++98 -Wall -Wextra -Werror _main_.cpp -D ns=ft -o ft
 	clang++ -std=c++98 -Wall -Wextra -Werror _main_.cpp -D ns=std -o std
