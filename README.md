@@ -30,9 +30,16 @@ The difference is the namespace ; where you would call std::vector<T>, you now c
 
 If you want to test the containers, just run the script with run arg :
 ```Bash
-./script.sh run
+./script.sh "run"
 ```
-
+If you want to test the leak, First install valgrind using this command :
+  ```Bash
+  ./script.sh "install"
+  ```
+then run this command :
+ ```Bash
+  ./script.sh "leak"
+ ```
 ## Resources :
 - [RBT](https://www.codeproject.com/Articles/5301424/Build-the-Forest-in-Python-Series-Red-Black-Tree) <br>
 - [Iterators](https://www.geeksforgeeks.org/iterators-c-stl/) <br>
